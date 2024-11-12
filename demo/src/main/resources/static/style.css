@@ -1,0 +1,322 @@
+/*Global block starts here */
+* {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    width:98%;
+    height:100%;
+    opacity: 75%;
+}
+
+.question{
+    text-align: center;
+}
+.title{
+    color:#ccc;
+}
+.answer-content{
+    text-align: center;
+    line-height: 3em;
+}
+
+.sidebyside{
+display:flex;
+font-size:15px;
+vertical-align: middle;
+}
+/* Global block ends here */
+
+/* Container Block starts here */
+.container{
+    display:flex;
+    flex-wrap: wrap;
+    margin-left:1em;
+    margin-top:2em;
+}
+/* Container Block Ends here */
+
+/*previous-poll block starts Here */
+#previous-poll{
+    flex: 30%;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+/* Previous Poll block ends here */
+
+/* current-poll Block starts here */
+#current-poll{
+    flex: 68%;
+    background-color: white;
+    padding: 20px;
+    border:1px solid black;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+/* current poll block ends here */
+/* Top bar block starts here */
+#top-bar{
+    margin: 0 1em;
+}
+#top-bar #menu{
+    font-size:25px;
+    line-height: 5em;
+    text-align: right;
+    margin-left:auto;
+}
+#top-bar .logo{
+    height:5em;
+    width:5em;
+    border-radius: 20%;
+    position: absolute;
+    top:1em;
+    cursor:pointer;
+}
+#top-bar .title{
+    font-size:25px;
+    margin-left:4em;
+    line-height: 5em;
+    float:left;
+    cursor:pointer;
+}
+
+/* Top bar block Ends here */
+
+/* Current-poll starts here */
+#current-poll .answer-content{
+    border:2px solid #ccc;
+    border-radius:0.5em;
+    height:3em;
+    margin:1em 1em 1em 1em;
+    cursor:pointer;
+    overflow-y:auto;
+    max-height:2.8em;
+    /* change using js the percentage */
+}
+#current-poll .answer-content p{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+#current-poll .answer-content p#cur1{
+    height:auto;
+    background:linear-gradient(to right, #cfcfea 20%, white 0%);
+}
+#current-poll .answer-content p#cur2{
+    height:auto;
+    background:linear-gradient(to right, #cfcfea 40%, white 0%);
+}
+#current-poll .answer-content.selected{
+    border:2px solid black;
+}
+/* Current poll ends here */
+
+/* previous question starts here */
+.previous-question{
+    margin-top:2em;
+}
+.p-question{
+    border:1px solid black;
+    height:8em;
+    margin-top:1em;
+    border-radius:5px;
+    margin-bottom:1em;
+    max-height: 8em;
+    overflow-y: hidden;
+}
+.p-question h4{
+    margin-top:0.5em;
+}
+.previous-answer-content{
+    text-align: center;
+    line-height: 2em;
+    border:2px solid #ccc;
+    border-radius:0.5em;
+    height:2em;
+    margin:0.5em 0.5em 0.5em 0.5em;
+    overflow-y:auto;
+    max-height:2em;
+}
+.previous-answer-content p#cur3{
+    height:auto;
+    background:linear-gradient(to right, #cfcfea 20%, white 0%);
+}
+/* previous question ends here */
+
+/* Centered Box starts here */
+/* rounded corners https://www.w3schools.com/csS/css3_borders.asp */
+/* rgba https://www.w3schools.com/cssref/func_rgba.php */
+
+.centeredbox {
+    align-items: center;
+    text-align: center;
+    position: absolute; /* or absolute */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: space-around;
+  }
+
+.centeredbox .container{
+    background-color: #ffffff;
+    border:none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    border-radius: 25px;
+  }
+  .centeredbox .container .txt{
+    text-align: center;
+  }
+  .centeredbox .container .lgn{
+    padding: 20px;
+    max-width: 400px;
+  }
+  .centeredbox .container .rgstr{
+    padding: 50px;
+    max-height: 2000px;
+    max-width: 2000px;
+  } 
+  .centeredbox .container .lgn input[type = text],
+  .centeredbox .container .lgn input[type = email],
+  .centeredbox .container .lgn input[type = password]
+  {
+    border: 1px solid #dddfe2;
+    color: #1d2129;
+    padding: 0 8px;
+    outline: none;
+    height :45px;
+    margin :5px 0;
+    font-size: 16px;
+    width : 80%;
+    border: 1px solid #dddfe2;
+    vertical-align: middle;
+  }
+  .centeredbox .container .rgstr 
+  input[type = text],
+  .centeredbox .container .rgstr input[type = email], 
+  .centeredbox .container .rgstr input[type = password]{
+    border: 1px solid #dddfe2;
+    color: #1d2129;
+    padding: 0 8px;
+    outline: none;
+    height :30px;
+    margin :8px;
+    font-size: 16px;
+    width : 97%;
+  }
+  .centeredbox .container .rgstr 
+  .btn-rgstr{
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+    margin : 8px;
+    width: 80%;
+    height:30px;
+  }
+  .centeredbox .container .rgstr 
+  .btn-rgstr:hover{
+    background-color: #1877a2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .centeredbox .container .rgstr input[type = text]:focus,
+  .centeredbox .container .rgstr input[type = email]:focus,
+  .centeredbox .container .rgstr input[type = password]:focus {
+    border-color: #1877f2;
+    box-shadow: 0 0 0 2px #e7f3ff;
+  }
+  .centeredbox .container .lgn 
+  .btn-login{
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+    width: 85%;
+    height: 45px;
+  }
+  .centeredbox .container .lgn 
+  .btn-login:hover{
+    background-color: #1877a2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .centeredbox .container .rgstr 
+  .sm-btn{
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+    margin : 8px;
+    width: 40%;
+    height:30px;
+  }
+  .centeredbox .container .rgstr
+  .sm-btn:hover{
+    background-color: #1877a2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    padding: 0 16px;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .centeredbox .container .lgn input[type = text]:focus,
+  .centeredbox .container .lgn input[type = email]:focus,
+  .centeredbox .container .lgn input[type = password]:focus {
+    border-color: #1877f2;
+    box-shadow: 0 0 0 2px #e7f3ff;
+  }
+  /* Centered Box ends here */
+
+  /* Password Checkk */
+  #pcheck {
+    display:none;
+    background: #f1f1f1;
+    color: #000;
+    position: relative;
+    margin-top: 10px;
+}
+#pcheck p {
+  padding: 5px 35px;
+  font-size: 16px;
+}
+.valid {
+   color: green;
+}
+/*https://developer.mozilla.org/en-US/docs/web/css/::before*/
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+  
+  /* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+  
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}

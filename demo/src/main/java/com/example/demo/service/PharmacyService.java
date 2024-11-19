@@ -1,16 +1,17 @@
 package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Pharmacy;
 import com.example.demo.repo.PharmacyRepo;
 
-
+@Service
 public class PharmacyService {
     @Autowired
     PharmacyRepo rep;
 
-    public void addPatient(Pharmacy pharmacy){
+    public void addPharmacy(Pharmacy pharmacy){
         rep.save(pharmacy);
     }
     

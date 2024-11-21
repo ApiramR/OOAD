@@ -29,11 +29,11 @@ public class securityconfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(request-> request.requestMatchers("/").permitAll()
-            .requestMatchers("/css/**", "/js/**", "/images/**","/register").permitAll()
-            .anyRequest().permitAll())
-            .formLogin(form -> form.loginPage("/login").permitAll())
+            .requestMatchers("/css/**", "/js/**", "/images/**","/register","/login").permitAll()
+            .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
-            .logout(LogoutConfigurer::permitAll);
+            .logout(LogoutConfigurer::permitAll)
+            .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

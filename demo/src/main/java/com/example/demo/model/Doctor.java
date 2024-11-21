@@ -6,10 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 
 @Entity
-@Table(name = "Doctor")
+@Table(name = "Doctor",uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"username","typ"}),
+    @UniqueConstraint(columnNames = {"email","typ"}),
+    @UniqueConstraint(columnNames = {"pno","typ"})
+})
 public class Doctor extends Userr {
 
     @Id

@@ -30,10 +30,19 @@ public class DoctorService {
         return false;
     }
 
-    public void addDoctor(Doctor doc){
+    public String addDoctor(Doctor doc){
+        if (rep.findByUsernameAndTyp(doc.getUsername(),doc.getTyp()) != null){
+            return "Username already taken";
+        }
+        if (rep.findByEmailAndTyp(doc.getEmail(),doc.getTyp()) == null){
+            return "email already taken";
+        }
+        if (rep.findByPnoAndTyp(doc.getPno(),doc.getTyp()) == null){
+            return "Pno already taken";
+        }
         rep.save(doc);
+        return "success";
     }
-    
     public void updateDoctor(Doctor doc){
         rep.save(doc);
     }

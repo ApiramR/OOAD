@@ -29,8 +29,18 @@ public class SupplierService {
         return false;
     }
 
-    public void addSupplier(Supplier supplier){
+    public String addSupplier(Supplier supplier){
+        if (rep.findByUsernameAndTyp(supplier.getUsername(),supplier.getTyp()) != null){
+            return "Username already taken";
+        }
+        if (rep.findByEmailAndTyp(supplier.getEmail(),supplier.getTyp()) == null){
+            return "email already taken";
+        }
+        if (rep.findByPnoAndTyp(supplier.getPno(),supplier.getTyp()) == null){
+            return "Pno already taken";
+        }
         rep.save(supplier);
+        return "success";
     }
     
     public void updateSupplier(Supplier supplier){

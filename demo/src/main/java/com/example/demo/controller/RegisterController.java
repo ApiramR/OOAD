@@ -46,7 +46,7 @@ public class RegisterController {
 
     @PostMapping(value="/register")
     public String adduser(@RequestParam Map<String, String> formData){
-
+        String valid = "success";
         if (formData.get("typ").equals("Doctor")){
             Doctor doctor = new Doctor();
             try{
@@ -76,7 +76,7 @@ public class RegisterController {
             catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
             }
-            doctorService.addDoctor(doctor);
+            valid = doctorService.addDoctor(doctor);
         }
         else if (formData.get("typ").equals("Supplier")){
             Supplier supplier = new Supplier();
@@ -106,7 +106,7 @@ public class RegisterController {
             }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
             }
-            supplierService.addSupplier(supplier);
+            valid = supplierService.addSupplier(supplier);
         }
         else if (formData.get("typ").equals("Patient")){
             for (String field:patientService.getFields()){
@@ -139,7 +139,7 @@ public class RegisterController {
             }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
             }
-            patientService.addPatient(patient);
+            valid = patientService.addPatient(patient);
         }
         else{
             System.out.println("Hello");
@@ -170,8 +170,12 @@ public class RegisterController {
             }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
             }
-            pharmacyService.addPharmacy(pharmacy);
+            valid = pharmacyService.addPharmacy(pharmacy);
         }
-        return "redirect:/login";
+        if (valid.equals("success"))
+            return "redirect:/login";
+        else{   
+            return "redirect:/register?" + valid;
+        }
     }
 }

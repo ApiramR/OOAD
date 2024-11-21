@@ -29,8 +29,18 @@ public class PatientService {
         }
         return false;
     }
-    public void addPatient(Patient patient){
+    public String addPatient(Patient patient){
+        if (rep.findByUsernameAndTyp(patient.getUsername(),patient.getTyp()) != null){
+            return "Username already taken";
+        }
+        if (rep.findByEmailAndTyp(patient.getEmail(),patient.getTyp()) == null){
+            return "email already taken";
+        }
+        if (rep.findByPnoAndTyp(patient.getPno(),patient.getTyp()) == null){
+            return "Pno already taken";
+        }
         rep.save(patient);
+        return "success";
     }
     
     public void updatePatient(Patient patient){

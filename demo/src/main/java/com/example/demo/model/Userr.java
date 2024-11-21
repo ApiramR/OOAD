@@ -24,23 +24,23 @@ public class Userr {
     @Column(nullable = false)
     private String Lname;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false , unique = true)
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false , unique = true)
-    private String Pno;
+    @Column(nullable = false)
+    private String pno;
 
     @Column(nullable = false)
     private LocalDate DOB;
 
     @Column(nullable = false)
-    private String Gender;
+    private String gender;
 
     @Column(nullable = false)
-    private String Address;
+    private String address;
 
     @Column(nullable = false)
     private String typ;

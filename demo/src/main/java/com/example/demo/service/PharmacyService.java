@@ -19,8 +19,18 @@ public class PharmacyService {
     @Autowired
     PharmacyRepo rep;
 
-    public void addPharmacy(Pharmacy pharmacy){
+    public String addPharmacy(Pharmacy pharmacy){
+        if (rep.findByUsernameAndTyp(pharmacy.getUsername(),pharmacy.getTyp()) != null){
+            return "Username already taken";
+        }
+        if (rep.findByEmailAndTyp(pharmacy.getEmail(),pharmacy.getTyp()) == null){
+            return "email already taken";
+        }
+        if (rep.findByPnoAndTyp(pharmacy.getPno(),pharmacy.getTyp()) == null){
+            return "Pno already taken";
+        }
         rep.save(pharmacy);
+        return "success";
     }
     
     public void updatePharmacy(Pharmacy pharmacy){

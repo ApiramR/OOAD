@@ -7,4 +7,7 @@ import com.example.demo.model.Doctor;
 @Repository
 public interface DoctorRepo extends JpaRepository<Doctor, Integer>{
     Doctor findByUsername(String username);
+    Doctor findByUsernameAndTyp(String username,String typ);
+    Doctor findByEmailAndTyp(String email,String typ);
+    Doctor findByPnoAndTyp(String pno,String typ);
 }

@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Pharmacy")
-public class Pharmacy extends User {
+public class Pharmacy extends Userr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long PharmacyID;

@@ -6,5 +6,5 @@ import com.example.demo.model.Pharmacy;
 
 @Repository
 public interface PharmacyRepo extends JpaRepository<Pharmacy , Integer>{
-
+    Pharmacy findByUsername(String Username);
 }

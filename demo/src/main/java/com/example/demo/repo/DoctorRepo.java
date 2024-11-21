@@ -6,5 +6,5 @@ import com.example.demo.model.Doctor;
 
 @Repository
 public interface DoctorRepo extends JpaRepository<Doctor, Integer>{
-
+    Doctor findByUsername(String username);
 }

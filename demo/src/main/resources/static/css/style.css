@@ -180,23 +180,50 @@ vertical-align: middle;
   } 
   .centeredbox .container .lgn input[type = text],
   .centeredbox .container .lgn input[type = email],
-  .centeredbox .container .lgn input[type = password]
+  .centeredbox .container .lgn input[type = password],
+  .centeredbox .container .lgn select
   {
     border: 1px solid #dddfe2;
     color: #1d2129;
     padding: 0 8px;
     outline: none;
-    height :45px;
-    margin :5px 0;
+    height:45px;
+    margin:5px 0;
     font-size: 16px;
-    width : 80%;
+    width: 80%;
     border: 1px solid #dddfe2;
+    border-radius: 4px;
     vertical-align: middle;
+    box-sizing: border-box; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .centeredbox .container .lgn input[type = text]:hover,
+  .centeredbox .container .lgn input[type = email]:hover,
+  .centeredbox .container .lgn input[type = password]:hover,
+  .centeredbox .container .lgn select:hover
+  {
+    border-color: #1877f2;
+  }
+  .centeredbox .container .lgn select {
+    -webkit-appearance: none; /* Removes default dropdown styling for WebKit browsers */
+    -moz-appearance: none; /* Removes default dropdown styling for Firefox */
+    appearance: none; /* Removes default dropdown styling for modern browsers */
+    background-color: #fff; /* Ensures a consistent background color */
+    cursor: pointer;
+  }
+  .centeredbox .container .rgstr select {
+    -webkit-appearance: none; /* Removes default dropdown styling for WebKit browsers */
+    -moz-appearance: none; /* Removes default dropdown styling for Firefox */
+    appearance: none; /* Removes default dropdown styling for modern browsers */
+    background-color: #fff; /* Ensures a consistent background color */
+    cursor: pointer;
   }
   .centeredbox .container .rgstr 
   input[type = text],
   .centeredbox .container .rgstr input[type = email], 
-  .centeredbox .container .rgstr input[type = password]{
+  .centeredbox .container .rgstr input[type = password],
+  .centeredbox .container .rgstr select
+  {
     border: 1px solid #dddfe2;
     color: #1d2129;
     padding: 0 8px;
@@ -205,6 +232,17 @@ vertical-align: middle;
     margin :8px;
     font-size: 16px;
     width : 97%;
+  }
+  .centeredbox .container .rgstr input[type = date]
+  {
+    border: 1px solid #dddfe2;
+    color: #1d2129;
+    padding: 0 8px;
+    outline: none;
+    height :30px;
+    margin :8px;
+    font-size: 16px;
+    width : 83%;
   }
   .centeredbox .container .rgstr 
   .btn-rgstr{
@@ -231,7 +269,9 @@ vertical-align: middle;
   }
   .centeredbox .container .rgstr input[type = text]:focus,
   .centeredbox .container .rgstr input[type = email]:focus,
-  .centeredbox .container .rgstr input[type = password]:focus {
+  .centeredbox .container .rgstr input[type = password]:focus,
+  .centeredbox .container .rgstr select:focus
+  {
     border-color: #1877f2;
     box-shadow: 0 0 0 2px #e7f3ff;
   }
@@ -282,7 +322,8 @@ vertical-align: middle;
   }
   .centeredbox .container .lgn input[type = text]:focus,
   .centeredbox .container .lgn input[type = email]:focus,
-  .centeredbox .container .lgn input[type = password]:focus {
+  .centeredbox .container .lgn input[type = password]:focus,
+  .centeredbox .container .lgn select:focus {
     border-color: #1877f2;
     box-shadow: 0 0 0 2px #e7f3ff;
   }
@@ -320,3 +361,4 @@ vertical-align: middle;
   left: -35px;
   content: "✖";
 }
+/* Password check ends here */

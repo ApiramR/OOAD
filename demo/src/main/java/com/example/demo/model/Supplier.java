@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Supplier")
-public class Supplier extends User {
+public class Supplier extends Userr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long SupplierID;

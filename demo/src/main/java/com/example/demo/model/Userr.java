@@ -3,9 +3,6 @@ package com.example.demo.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor 
 @AllArgsConstructor
 @MappedSuperclass
-public class User {
+public class Userr {
 
     @Column(nullable = false)
     private String Fname;
@@ -27,8 +24,8 @@ public class User {
     @Column(nullable = false)
     private String Lname;
     
-    @Column(nullable = false , unique = true)
-    private String Username;
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @Column(nullable = false , unique = true)
     private String email;
@@ -48,7 +45,10 @@ public class User {
     @Column(nullable = false)
     private String typ;
 
+    @Column(nullable = false)
+    private String Password;
 
+    
     /*@ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @joinTable(
         name = "user_roles",

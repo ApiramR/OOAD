@@ -6,5 +6,5 @@ import com.example.demo.model.Supplier;
 
 @Repository
 public interface SupplierRepo extends JpaRepository<Supplier , Integer>{
-
+    Supplier findByUsername(String Username);
 }

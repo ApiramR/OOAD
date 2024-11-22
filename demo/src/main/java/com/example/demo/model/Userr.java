@@ -36,7 +36,6 @@ public class Userr {
     @Column(nullable = false)
     private String pno;
     
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate DOB;
 

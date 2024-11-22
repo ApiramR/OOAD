@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Doctor;
 import com.example.demo.model.Supplier;
 import com.example.demo.repo.SupplierRepo;
 
@@ -33,10 +34,10 @@ public class SupplierService {
         if (rep.findByUsernameAndTyp(supplier.getUsername(),supplier.getTyp()) != null){
             return "Username already taken";
         }
-        if (rep.findByEmailAndTyp(supplier.getEmail(),supplier.getTyp()) == null){
+        if (rep.findByEmailAndTyp(supplier.getEmail(),supplier.getTyp()) != null){
             return "email already taken";
         }
-        if (rep.findByPnoAndTyp(supplier.getPno(),supplier.getTyp()) == null){
+        if (rep.findByPnoAndTyp(supplier.getPno(),supplier.getTyp()) != null){
             return "Pno already taken";
         }
         rep.save(supplier);
@@ -47,9 +48,12 @@ public class SupplierService {
         rep.save(supplier);
     }
 
-    public Supplier getSupplier(int supplierID){
+    public Supplier getSupplierByID(int supplierID){
         return rep.findById(supplierID).orElse(new Supplier());
     } 
+    public Supplier getSupplierByUsername(String username){
+        return rep.findByUsername(username);
+    }
 
     public void deleteSupplier(int supplierID){
         rep.deleteById(supplierID);

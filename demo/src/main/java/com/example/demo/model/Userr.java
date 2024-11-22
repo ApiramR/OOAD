@@ -2,8 +2,11 @@ package com.example.demo.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +35,8 @@ public class Userr {
 
     @Column(nullable = false)
     private String pno;
-
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate DOB;
 
@@ -48,6 +52,15 @@ public class Userr {
     @Column(nullable = false)
     private String Password;
 
+    @Column(nullable = false)
+    private String profilepicture;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.profilepicture == null) {
+            this.profilepicture = "defaultpp.jpg";  // Default path
+        }
+    }
     
     /*@ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @joinTable(

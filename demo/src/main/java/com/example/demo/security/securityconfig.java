@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,10 +31,17 @@ public class securityconfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(request-> request.requestMatchers("/").permitAll()
             .requestMatchers("/css/**", "/js/**", "/images/**","/register","/login").permitAll()
+            .requestMatchers("/patient").hasRole("Patient")  // Only patients can access /patient
+            .requestMatchers("/doctor/**").hasRole("Doctor")    // Only doctors can access /doctor
+            .requestMatchers("/supplier/**").hasRole("Supplier") // Only suppliers can access /supplier
+            .requestMatchers("/pharmacy/**").hasRole("Pharmacy")
             .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .logout(LogoutConfigurer::permitAll)
-            .formLogin(AbstractHttpConfigurer::disable);
+            .formLogin(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .maximumSessions(1).expiredUrl("/login?expired=true"));
 
         return http.build();
     }

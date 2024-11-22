@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import jakarta.servlet.http.HttpSession;
 import com.example.demo.service.DoctorService;
 import com.example.demo.service.PatientService;
 import com.example.demo.service.PharmacyService;
@@ -21,6 +21,8 @@ import com.example.demo.service.SupplierService;
 
 @Controller
 public class LoginController {
+    @Autowired
+    private HttpSession session;
     @Autowired
     private DoctorService doctorService;
     @Autowired
@@ -56,7 +58,22 @@ public class LoginController {
         if (isAuthenticated){
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, password, getAuthorities(role));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return "redirect:/";
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+            System.out.println("User authenticated: " + auth.isAuthenticated());
+            System.out.println("Authorities: " + auth.getAuthorities());
+            System.out.println("Username: " + auth.getName());
+            System.out.println(role);
+            if (role.equals("Patient")){
+                return "redirect:/patient";
+            }
+            else if (role.equals("Doctor")){
+                return "redirect:/doctor";
+            }
+            else if (role.equals("Supplier")){
+                return "redirect:/supplier";
+            }
+            else return "redirect:/pharmacy";
         }
         //redirectAttributes.addFlashAttribute("error", "Invalid Credentials");
         return "redirect:/login?error = InvalidCredientials";

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Doctor;
 import com.example.demo.model.Patient;
 import com.example.demo.repo.PatientRepo;
 
@@ -33,10 +34,10 @@ public class PatientService {
         if (rep.findByUsernameAndTyp(patient.getUsername(),patient.getTyp()) != null){
             return "Username already taken";
         }
-        if (rep.findByEmailAndTyp(patient.getEmail(),patient.getTyp()) == null){
+        if (rep.findByEmailAndTyp(patient.getEmail(),patient.getTyp()) != null){
             return "email already taken";
         }
-        if (rep.findByPnoAndTyp(patient.getPno(),patient.getTyp()) == null){
+        if (rep.findByPnoAndTyp(patient.getPno(),patient.getTyp()) != null){
             return "Pno already taken";
         }
         rep.save(patient);
@@ -47,10 +48,12 @@ public class PatientService {
         rep.save(patient);
     }
 
-    public Patient getPatient(int patientID){
+    public Patient getPatientByID(int patientID){
         return rep.findById(patientID).orElse(new Patient());
     } 
-
+    public Patient getPatientByUsername(String username){
+        return rep.findByUsername(username);
+    }
     public void deletePatient(int patientID){
         rep.deleteById(patientID);
     }

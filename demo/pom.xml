@@ -77,7 +77,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-	
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version> <!-- Adjust the version based on your needs -->
+			<scope>provided</scope>  <!-- "provided" means it's expected to be available at runtime -->
+    	</dependency>
 	</dependencies>
 
 	<build>

@@ -34,10 +34,10 @@ public class DoctorService {
         if (rep.findByUsernameAndTyp(doc.getUsername(),doc.getTyp()) != null){
             return "Username already taken";
         }
-        if (rep.findByEmailAndTyp(doc.getEmail(),doc.getTyp()) == null){
+        if (rep.findByEmailAndTyp(doc.getEmail(),doc.getTyp()) != null){
             return "email already taken";
         }
-        if (rep.findByPnoAndTyp(doc.getPno(),doc.getTyp()) == null){
+        if (rep.findByPnoAndTyp(doc.getPno(),doc.getTyp()) != null){
             return "Pno already taken";
         }
         rep.save(doc);
@@ -47,9 +47,12 @@ public class DoctorService {
         rep.save(doc);
     }
 
-    public Doctor getDoctor(int DocID){
+    public Doctor getDoctorByID(int DocID){
         return rep.findById(DocID).orElse(new Doctor());
     } 
+    public Doctor getDoctorByUsername(String username){
+        return rep.findByUsername(username);
+    }
     public void deleteDoctor(int DocID){
         rep.deleteById(DocID);
     }

@@ -97,6 +97,15 @@
                 input.setAttribute('required', true);
                 field.appendChild(input);
             }
+            else if (role === "Pharmacy"){
+                const input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'openinghour');
+                input.setAttribute('name', 'openingHour');
+                input.setAttribute('placeholder', 'Enter the Opening hour');
+                input.setAttribute('required', true);
+                field.appendChild(input);
+            }
             else{
                 field.innerHTML="";
             }

@@ -1,12 +1,11 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Pharmacy",uniqueConstraints = {
     @UniqueConstraint(columnNames = {"username","typ"}),
@@ -17,4 +16,10 @@ public class Pharmacy extends Userr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long PharmacyID;
+
+    @Column
+    private String openingHours;
+
+
+
 }

@@ -123,7 +123,6 @@ public class pharmacyController {
 
 
 
-
     //Dashboard for seconds
     @RequestMapping(value="/pharmacy/{username}",method = RequestMethod.GET)
     String urlDashboard(Model model){

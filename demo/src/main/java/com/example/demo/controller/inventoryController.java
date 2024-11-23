@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Inventory;
+import com.example.demo.model.Medicine;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class inventoryController {
     private long inventoryIDCounter = 1;
 
     // Show Inventory Page
-    @GetMapping
+    @GetMapping("/pharmacy/{username}/inventory")
     public String showInventoryPage(Model model) {
         model.addAttribute("inventoryList", inventoryList); // Pass inventory list to the view
         model.addAttribute("responseMessage", ""); // Placeholder for messages
@@ -27,26 +28,24 @@ public class inventoryController {
     }
 
     // Add Inventory Item
-    @PostMapping("/add")
+    @PostMapping("/pharmacy/{username}/inventory/add")
     public String addInventory(
-            @RequestParam int medID,
-            @RequestParam String medName,
-            @RequestParam String medType,
-            @RequestParam String strength,
-            @RequestParam String manufacturer,
+            @RequestParam int inventoryID,
+            @RequestParam Medicine medID,
             @RequestParam long price,
             @RequestParam LocalDate expiryDate,
             @RequestParam int quantityInStock,
             Model model
-    ) {/*
+    ) {
         // Create a new Inventory item with auto-incremented InventoryID
-        Inventory inventory = new Inventory(medID, medName, medType, strength, manufacturer, price);
+        Inventory inventory = new Inventory(inventoryID, medID.getMedID(),price,expiryDate,quantityInStock);
         inventory.setInventoryID(inventoryIDCounter++);
+        inventory.setMedicine(medID);
+        inventory.setPrice(price);
         inventory.setExpiryDate(expiryDate);
         inventory.setQuantityInStock(quantityInStock);
 
-        // Add item to list
-        inventoryList.add(inventory); */
+        inventoryList.add(inventory);   // Add item to list
 
         // Update model for rendering
         model.addAttribute("inventoryList", inventoryList);
@@ -54,7 +53,7 @@ public class inventoryController {
         return "pharmacy/inventory";
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/pharmacy/{username}/inventory/delete/{id}")
     public String deleteInventory(@PathVariable long id, Model model) {
         // Remove the inventory item with the given ID
         boolean removed = inventoryList.removeIf(inventory -> inventory.getInventoryID() == id);

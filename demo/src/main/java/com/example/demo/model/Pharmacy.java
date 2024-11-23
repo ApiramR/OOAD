@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -20,6 +22,12 @@ public class Pharmacy extends Userr {
     @Column
     private String openingHours;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "Pharmacy_Inventory",
+            joinColumns = @JoinColumn(name = "pharmacy_id"),
+            inverseJoinColumns = @JoinColumn(name = "inventory_id")
+    )
+    private List<Inventory> inventories; // Many-to-Many relationship
 
 }

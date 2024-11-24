@@ -1,0 +1,81 @@
+/* General Dashboard Styling */
+.dashboard-container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1200px;
+}
+
+.dashboard-header h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Search Bar Styling */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;  /* Align items vertically */
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    padding: 10px;
+    width: 200px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding-left: 30px; /* Space for the icon inside the input */
+    box-sizing: border-box;  /* Ensure padding doesn't affect width */
+}
+
+.search-bar button {
+    padding: 10px 15px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: black;
+}
+
+/* Patient Details Panel */
+.patient-details-panel {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Personal and Medication Details Columns */
+.patient-details-columns {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+}
+
+.personal-details,
+.medication-details {
+    width: 48%;
+}
+
+.personal-details h3,
+.medication-details h3 {
+    text-align: center;
+}
+
+.personal-details p,
+.medication-details p {
+    margin: 10px 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .patient-details-columns {
+        flex-direction: column;
+    }
+    .personal-details, .medication-details {
+        width: 100%;
+    }
+}

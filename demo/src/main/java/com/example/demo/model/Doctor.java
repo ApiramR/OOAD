@@ -10,6 +10,8 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 
 @Entity
 @Getter

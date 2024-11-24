@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Pharmacy;
 
+import java.util.List;
+
 @Repository
 public interface PharmacyInventoryRepo extends JpaRepository<Pharmacy , Integer>{
-    Pharmacy findByPharmacyInventories(String inventory);
-    Pharmacy findByPharmacyInventoriesAndTyp(String inventory,String typ);
+    List<Pharmacy> findByInventories_InventoryID(Long inventoryID);
 }
 

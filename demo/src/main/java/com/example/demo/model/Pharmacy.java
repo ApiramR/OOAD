@@ -22,12 +22,7 @@ public class Pharmacy extends Userr {
     @Column
     private String openingHours;
 
-    @ManyToOne
-    @JoinTable(
-            name = "Pharmacy_Inventory",
-            joinColumns = @JoinColumn(name = "pharmacy_id"),
-            inverseJoinColumns = @JoinColumn(name = "inventory_id")
-    )
-    private List<Inventory> inventories; // Many-to-Many relationship
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Inventory> inventories; // One Pharmacy with Many Inventories
 
 }

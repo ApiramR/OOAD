@@ -35,68 +35,11 @@ public class Inventory {
     @JoinColumn(name = "medID", nullable = false)
     private Medicine medicine;
 
-    @OneToMany(mappedBy = "inventories")
-    private List<Pharmacy> pharmacies; // Reverse side of Many-to-Many
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pharmacy_id", nullable = false)
+    private Pharmacy pharmacy; // Many Inventories belong to One Pharmacy
 
 
-
-    public Inventory(long inventoryID, long medID, long price, LocalDate expiryDate, int quantityInStock) {
-        this.expiryDate = expiryDate;
-        this.inventoryID = inventoryID;
-        this.medicine = medicine;
-        this.price = price;
-        this.quantityInStock = quantityInStock;
-        this.pharmacies = pharmacies;
-    }
-
-
-    //getter and setters
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public Long getInventoryID() {
-        return inventoryID;
-    }
-
-    public void setInventoryID(Long inventoryID) {
-        this.inventoryID = inventoryID;
-    }
-
-    public Medicine getMedicine() {
-        return medicine;
-    }
-
-    public void setMedicine() {
-        this.medicine = medicine;
-    }
-
-    public List<Pharmacy> getPharmacies() {
-        return pharmacies;
-    }
-
-    public void setPharmacies(List<Pharmacy> pharmacies) {
-        this.pharmacies = pharmacies;
-    }
-
-    public long getPrice() {
-        return price;
-    }
-
-    public void setPrice(long price) {
-        this.price = price;
-    }
-
-    public int getQuantityInStock() {
-        return quantityInStock;
-    }
-
-    public void setQuantityInStock(int quantityInStock) {
-        this.quantityInStock = quantityInStock;
+    public Inventory(int inventoryID, Long medID, long price, LocalDate expiryDate, int quantityInStock) {
     }
 }

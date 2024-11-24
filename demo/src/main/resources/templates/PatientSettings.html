@@ -34,10 +34,10 @@
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
-            <img th:src="${patient.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
+            <img id="sidebarProfilePic" th:src="${patient.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
             </div>
             <div class="w3-col w3-bar">
-            <span>Welcome, <strong th:text="${patient.Fname} + ' ' + (${patient.Mname} != null and ${patient.Mname} != '' ? ${patient.Mname} + ' ' : '') + ${patient.Lname}"></strong></span><br>
+            <span id = "welcomecard">Welcome, <strong th:text="${patient.Fname} + ' ' + (${patient.Mname} != null and ${patient.Mname} != '' ? ${patient.Mname} + ' ' : '') + ${patient.Lname}"></strong></span><br>
             
             </div>
         </div>
@@ -74,18 +74,20 @@
             <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
             <tr>
                 <td>Change Profile Picture</td>
-                <td><input class="w3-input w3-border w3-round" type="file" name = "profilepicture"></td>
+                <td><input id="profilePictureInput" class="w3-input w3-border w3-round" type="file" name="profilepicture" accept="image/*">
+                <img id="profilePicturePreview" class="w3-margin-top" style="width:80px;height:80px;border-radius:50%;display:none;">
+                </td>
             </tr>   
-            <tr>
+           <!-- <tr>
                 <td>Change Username</td>
                 <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Username" pattern = "^[a-zA-Z]+.$" name = "username"></td>
-            </tr>
+            </tr> -->
             <tr>
                 <td>Change Name</td>
                 <td>
-                    <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
-                    <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
-                    <input class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">   
+                    <input id = "Fname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
+                    <input id = "Mname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
+                    <input id = "Lname" class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">   
                 </td>
             </tr>
             <tr>
@@ -224,28 +226,50 @@
                 u.setCustomValidity('Passwords do not match');
               }
         }
-        $(document).ready(function () {
-        $("#saveSettings").on("click", function () {
+            $(document).ready(function () {
+        // Preview the selected profile picture
+        $("#profilePictureInput").on("change", function () {
+            let fileInput = this;
+            if (fileInput.files.length > 0) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#profilePicturePreview").attr("src", e.target.result).show();
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+
+        // Save settings with AJAX
+        $("#saveSettings").on("click", function (event) {
+            event.preventDefault(); // Prevent form submission
             var formData = new FormData($("#patientSettingsForm")[0]);
 
             $.ajax({
-                url: '/patient/settings', // Replace "johndoe" with the actual username
+                url: '/patient/settings',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    $("#responseMessage").text(response); // Display success message
-                    // Optionally update the profile picture preview dynamically
-                    let fileInput = $("#profilepicture")[0];
-                    if (fileInput.files.length > 0) {
+                    $("#responseMessage").text("Updated Successfully");
+
+                    // Update profile picture in sidebar dynamically
+                    let fileInput = $("#profilePictureInput")[0];
+                    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                        console.log("File detected:", fileInput);
                         let reader = new FileReader();
                         reader.onload = function (e) {
-                            $("#profilePicturePreview").attr("src", e.target.result);
+                            $("#sidebarProfilePic").attr("src", e.target.result);
                         }
                         reader.readAsDataURL(fileInput.files[0]);
-                        window.location.href = "/patient/settings";
                     }
+                    console.log("Fname",response.Fname);
+                    console.log("Mname",response.Mname);
+                    console.log("Lname",response.Lname);
+                    let updatedName = response.Fname + " " +
+                    (response.Mname ? response.Mname + " " : "") +
+                    response.Lname;
+                    $("#welcomecard strong").text(updatedName);
                 },
                 error: function (xhr, status, error) {
                     $("#responseMessage").text("Update failed: " + xhr.responseText);

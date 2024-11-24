@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +59,7 @@ public class PatientController {
     @Value("${file.upload-dir2}")
     private String imageuploaddir;
 
+    //patient dashboard
     @RequestMapping(value="/patient",method = RequestMethod.GET)
     String PatientDashboard(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -77,6 +77,7 @@ public class PatientController {
             return "redirect:/login";
         }
     }
+    //report dashboard
     @GetMapping(value="/patient/{username}/reports")
     public String reportDashboard(Model model,@PathVariable String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -91,6 +92,7 @@ public class PatientController {
         model.addAttribute("reportpath",reportpath);
         return "PatientReports.html";
     }
+    //Requesting prescriptions
     @RequestMapping(value="/patient/{username}/prescriptions")
     public String prescriptionDashboard(Model model,@PathVariable String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -105,7 +107,8 @@ public class PatientController {
         model.addAttribute("prescriptionpath",prescriptionpath);
         return "PatientPrescriptions.html";
     }
-    @RequestMapping(value="/patient/{username}/profile")
+    //Patientprofile
+    @GetMapping(value="/patient/{username}/profile")
     public String patientProfile(Model model,@PathVariable String username){
         if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
         Patient patient = patientService.getPatientByUsername(username);
@@ -113,6 +116,7 @@ public class PatientController {
         model.addAttribute("age",Period.between(patient.getDOB(), LocalDate.now()).getYears());
         return "PatientProfile.html";
     }
+    //Show patient settings
     @GetMapping(value="/patient/settings")
     public String patientSettings(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -125,6 +129,7 @@ public class PatientController {
         return "PatientSettings.html";
     }
 
+    //add reports
     @PostMapping(value="/patient/{username}/reports")
     public String patientAddReports(Model model,@PathVariable String username, @RequestParam String title, @RequestParam MultipartFile file){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -132,33 +137,8 @@ public class PatientController {
             return "redirect:/login?loginagain";
         }
         Patient patient = patientService.getPatientByUsername(username);
-        
-        try{
-            long l = System.currentTimeMillis();
-            String s = l + "";
-            String filename = 'a' + s + '_' + file.getOriginalFilename();
-            File directory = new File(uploadDir);
-            if (!directory.exists()){
-                directory.mkdirs();
-            }
-            File destinationFile = new File(directory,filename);
-            Report report = new Report();
-            report.setTitle(title);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedDate = LocalDateTime.now().format(formatter);
-            report.setCreatedDate(formattedDate);
-            report.setUpdatedDate(formattedDate);
-            report.setReportfile(filename);
-            report.setPatient(patient);
-            String added = reportService.addReport(report);
-            model.addAttribute("success",added);
-            if (added.equals("Uploaded Successfully")){
-                file.transferTo(destinationFile);
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-            model.addAttribute("success","Error Occured Please Try Again!");
-        }
+        String added = reportService.addReport(file,title,patient);
+        model.addAttribute("success",added);  
         List<Report>reports = patient.getReports();
         String reportpath = "/reports/";
         initialize(username, model, patient);
@@ -205,62 +185,22 @@ public class PatientController {
         if (authentication == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
+        Map<String,String> response = new HashMap<String,String>();
         String username = authentication.getName();
         Patient patient = patientService.getPatientByUsername(username);
-        if (file != null){
-            String currentReportpath = imageuploaddir + patient.getProfilepicture();
-            File currentpicture = new File(currentReportpath);
-            if (currentpicture.exists()){
-                System.out.println("Why its not deletingggg");
-                currentpicture.delete();
-            }
-            long l = System.currentTimeMillis();
-            String s = l + "";
-            String filename = 'a' + s + '_' + file.getOriginalFilename();
-            System.out.println(file.getOriginalFilename());
-            File directory = new File(imageuploaddir);
-            if (!directory.exists()){
-                directory.mkdirs();
-            }
-            try{
-                File destinationFile = new File(directory,filename);
-                patient.setProfilepicture(filename);    
-                file.transferTo(destinationFile);
-            }catch(IOException e){
-                e.printStackTrace();
-            }
+        if (file != null && !file.isEmpty()){
+            System.out.println("Yes iam changing profile picture");
+            patientService.Saveprofilepicture(file,patient);
         }
-        try{
-            for (Map.Entry<String, String> column : formData.entrySet()) {
-                String fieldName = column.getKey();
-                Object fieldValue = column.getValue();
-                if (fieldName.equals("profilepicture")){
-                    continue;
-                }
-                if (fieldValue == null)continue;
-                if (fieldValue.equals(""))continue;
-                System.out.println(fieldName + " " + (String)fieldValue);
-                    String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
-                    String res = (String)fieldValue;
-                    if (fieldName.equals("Password")){
-                        System.out.println(res);
-                        res = passwordEncoder.encode(res);
-                        System.out.println(res);
-                    }
-                    else if (fieldName.equals("height") || fieldName.equals("weight")){
-                        Method setter = Patient.class.getMethod(methodName, Double.class);
-                        setter.invoke(patient,Double.parseDouble(res));
-                        continue;    
-                    }
-                    Method setter = Patient.class.getMethod(methodName, String.class);
-                    setter.invoke(patient,res);
-            }
-        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
+        if (patientService.updatePatient(formData,patient)){
+            response.put("Fname",patient.getFname());
+            response.put("Mname",patient.getMname());
+            response.put("Lname",patient.getLname());
+            return ResponseEntity.ok(response);
         }
-        patientService.updatePatient(patient);
-        return ResponseEntity.ok("Update successful");
+        else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");;    
+        }
     }
     @RequestMapping(value = "/patient/debug", method = RequestMethod.GET)
     public String debugPatientAccess() {

@@ -37,13 +37,13 @@ public class PharmacyService {
         rep.save(pharmacy);
     }
 
-    public Pharmacy getPharmacyByID(int pharmacyID){
+    public Pharmacy getPharmacyByID(Long pharmacyID){
         return rep.findById(pharmacyID).orElse(new Pharmacy());
     } 
     public Pharmacy getPharmacyByUsername(String username){
         return rep.findByUsername(username);
     }
-    public void deletePharmacy(int pharmacyID){
+    public void deletePharmacy(Long pharmacyID){
         rep.deleteById(pharmacyID);
     }
     @Autowired

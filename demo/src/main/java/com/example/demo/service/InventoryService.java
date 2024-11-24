@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.repo.InventoryRepo;
 import com.example.demo.model.Inventory;
 
-import com.example.demo.repo.MedicineRepo;
-import com.example.demo.model.Medicine;
-
 
 @Service
 public class InventoryService {
@@ -24,13 +21,8 @@ public class InventoryService {
         return inventoryRepo.save(inventory);
     }
 
-
-
     public List<Inventory> findInventoriesByMedId(Long medicineId) {
         return inventoryRepo.findInventoriesByMedicineId(medicineId);
     }
-
-
-
 
 }

@@ -16,5 +16,5 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 
     @Query("SELECT i FROM Inventory i WHERE i.medicine.medID = :medicineId")
     List<Inventory> findInventoriesByMedicineId(@Param("medicineId") Long medicineId);
-
+    
 }

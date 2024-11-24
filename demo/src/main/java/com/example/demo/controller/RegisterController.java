@@ -151,6 +151,9 @@ public class RegisterController {
         else{
             System.out.println("Hello");
             Pharmacy pharmacy = new Pharmacy();
+            for (String field:pharmacyService.getFields()){
+                System.out.println(field + " " + formData.get(field));
+            }
             try{
                 for (String field : pharmacyService.getFields()){
                     if (formData.get(field) == null){

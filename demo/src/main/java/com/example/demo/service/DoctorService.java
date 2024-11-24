@@ -47,13 +47,13 @@ public class DoctorService {
         rep.save(doc);
     }
 
-    public Doctor getDoctorByID(int DocID){
+    public Doctor getDoctorByID(Long DocID){
         return rep.findById(DocID).orElse(new Doctor());
     } 
     public Doctor getDoctorByUsername(String username){
         return rep.findByUsername(username);
     }
-    public void deleteDoctor(int DocID){
+    public void deleteDoctor(Long DocID){
         rep.deleteById(DocID);
     }
     @Autowired

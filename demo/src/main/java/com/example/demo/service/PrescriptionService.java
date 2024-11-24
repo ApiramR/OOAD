@@ -19,13 +19,12 @@ public class PrescriptionService{
     @Autowired
     PrescriptionRepo rep;
 
-    public String addPrescription(Prescription prescription){
-        rep.save(prescription);
-        return "Uploaded Successfully";
+    public Prescription addPrescription(Prescription prescription){
+        return rep.save(prescription);
     }
     
-    public void updatePrescription(Prescription prescription){
-        rep.save(prescription);
+    public Prescription updatePrescription(Prescription prescription){
+        return rep.save(prescription);
     }
 
     public Prescription getPrescriptionByID(Long PresID){

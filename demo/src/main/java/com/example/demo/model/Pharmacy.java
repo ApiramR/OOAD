@@ -22,7 +22,7 @@ public class Pharmacy extends Userr {
     @Column
     private String openingHours;
 
-    @ManyToMany
+    @ManyToOne
     @JoinTable(
             name = "Pharmacy_Inventory",
             joinColumns = @JoinColumn(name = "pharmacy_id"),

@@ -35,7 +35,7 @@ public class Inventory {
     @JoinColumn(name = "medID", nullable = false)
     private Medicine medicine;
 
-    @ManyToMany(mappedBy = "inventories")
+    @OneToMany(mappedBy = "inventories")
     private List<Pharmacy> pharmacies; // Reverse side of Many-to-Many
 
 

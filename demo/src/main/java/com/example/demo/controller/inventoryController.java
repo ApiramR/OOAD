@@ -2,6 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Inventory;
 import com.example.demo.model.Medicine;
+import com.example.demo.model.Pharmacy;
+
+import com.example.demo.service.ModelMapperUtil;
+import com.example.demo.service.PharmacyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -9,8 +14,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+
+
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
 
 @Controller
 public class inventoryController {
@@ -20,19 +36,31 @@ public class inventoryController {
 
     // Counter for auto-incrementing InventoryID
     private long inventoryIDCounter = 1;
+    @Autowired
+    private final PharmacyService pharmacyService;
 
-    // Show Inventory Page
-    @GetMapping("/pharmacy/{username}/inventory")
-    public String showInventoryPage(Model model, @PathVariable String username) {
-        if (Authentication(username)) return "redirect:/login?loginagain";
+    @Autowired
+    private ModelMapperUtil modelMapperUtil;
 
-        model.addAttribute("inventoryList", inventoryList); // Pass inventory list to the view
-        model.addAttribute("responseMessage", ""); // Placeholder for messages
-        return "Pharmacy/pharmacy-inventory"; // Thymeleaf template
+    public inventoryController(PharmacyService pharmacyService) {
+        this.pharmacyService = pharmacyService;
     }
 
+    @RequestMapping(value="/pharmacy/{username}/inventory/add")
+    public String pharmacyInventory(Model model,@PathVariable String username){
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        String profilePicture = "/images/" + pharmacy.getProfilepicture();
+        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, pharmacyService.getFields());
+        pharmacyDict.put("profilepic",profilePicture);
+        model.addAttribute("pharmacy",pharmacyDict);
+        model.addAttribute("age", Period.between(pharmacy.getDOB(), LocalDate.now()).getYears());
+        return "Pharmacy/pharmacy-inventory-add";
+    }
+
+
     // Add Inventory Item
-    @PostMapping("/pharmacy/{username}/inventory/add")
+    @PostMapping("/pharmacy/{username}/inventory/addItem")
     public String addInventory(
             @RequestParam int inventoryID,
             @RequestParam Medicine medID,

@@ -92,17 +92,7 @@ public class PatientController {
     }
     @RequestMapping(value="/patient/{username}/profile")
     public String patientProfile(Model model,@PathVariable String username){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.getName().equals(username)){
-            if (authentication == null){
-                System.out.println("Authentication is null");
-            }
-            else{
-                System.out.println(username);
-                System.out.println(authentication.getName());
-            }
-            return "redirect:/login?loginagain";
-        }
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
         Patient patient = patientService.getPatientByUsername(username);
         String profilepicpath = "/images/";
         String profilepicture = profilepicpath + patient.getProfilepicture();

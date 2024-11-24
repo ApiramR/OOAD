@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Inventory;
 import com.example.demo.model.Medicine;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +23,12 @@ public class inventoryController {
 
     // Show Inventory Page
     @GetMapping("/pharmacy/{username}/inventory")
-    public String showInventoryPage(Model model) {
+    public String showInventoryPage(Model model, @PathVariable String username) {
+        if (Authentication(username)) return "redirect:/login?loginagain";
+
         model.addAttribute("inventoryList", inventoryList); // Pass inventory list to the view
         model.addAttribute("responseMessage", ""); // Placeholder for messages
-        return "pharmacy-inventory"; // Thymeleaf template
+        return "Pharmacy/pharmacy-inventory"; // Thymeleaf template
     }
 
     // Add Inventory Item
@@ -35,8 +39,11 @@ public class inventoryController {
             @RequestParam long price,
             @RequestParam LocalDate expiryDate,
             @RequestParam int quantityInStock,
-            Model model
-    ) {
+            Model model,
+            @PathVariable String username) {
+
+        if (Authentication(username)) return "redirect:/login?loginagain";
+
         // Create a new Inventory item with auto-incremented InventoryID
         Inventory inventory = new Inventory(inventoryID, medID.getMedID(),price,expiryDate,quantityInStock);
         inventory.setInventoryID(inventoryIDCounter++);
@@ -50,11 +57,12 @@ public class inventoryController {
         // Update model for rendering
         model.addAttribute("inventoryList", inventoryList);
         model.addAttribute("responseMessage", "Inventory item added successfully!");
-        return "pharmacy/inventory";
+        return "Pharmacy/pharmacy-inventory";
     }
 
     @PostMapping("/pharmacy/{username}/inventory/delete/{id}")
-    public String deleteInventory(@PathVariable long id, Model model) {
+    public String deleteInventory(@PathVariable long id, Model model, @PathVariable String username) {
+        if (Authentication(username)) return "redirect:/login?loginagain";
         // Remove the inventory item with the given ID
         boolean removed = inventoryList.removeIf(inventory -> inventory.getInventoryID() == id);
 
@@ -62,7 +70,22 @@ public class inventoryController {
         String message = removed ? "Inventory item deleted successfully!" : "Inventory item not found!";
         model.addAttribute("responseMessage", message);
         model.addAttribute("inventoryList", inventoryList); // Update list in the model
-        return "pharmacy/inventory"; // Redirect back to the inventory page
+        return "Pharmacy/pharmacy-inventory"; // Redirect back to the inventory page
+    }
+
+    static boolean Authentication(@PathVariable String username) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.getName().equals(username)){
+            if (authentication == null){
+                System.out.println("Authentication is null");
+            }
+            else{
+                System.out.println(username);
+                System.out.println(authentication.getName());
+            }
+            return true;
+        }
+        return false;
     }
 
 }

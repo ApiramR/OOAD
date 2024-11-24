@@ -36,6 +36,11 @@ public class pharmacyController {
 
     @RequestMapping(value="/pharmacy",method = RequestMethod.GET)
     String PharmacyDashboard(Model model){
+        if (Auth(model)) return "redirect:/login";
+        return "Pharmacy/pharmacy-dashboard";
+    }
+
+    private boolean Auth(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             System.out.println("Authenticated User: " + authentication.getName());
@@ -52,25 +57,15 @@ public class pharmacyController {
             model.addAttribute("pharmacy",pharmacyDict);
         }
         else{
-            return "redirect:/login";
+            return true;
         }
-        return "Pharmacy/pharmacy-dashboard";
+        return false;
     }
 
     //Accessing Pharmacy Inventory
     @RequestMapping(value="/pharmacy/{username}/inventory")
     public String pharmacyInventory(Model model,@PathVariable String username){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.getName().equals(username)){
-            if (authentication == null){
-                System.out.println("Authentication is null");
-            }
-            else{
-                System.out.println(username);
-                System.out.println(authentication.getName());
-            }
-            return "redirect:/login?loginagain";
-        }
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
         Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
         String profilePicture = "/images/" + pharmacy.getProfilepicture();
         Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, pharmacyService.getFields());
@@ -83,17 +78,7 @@ public class pharmacyController {
     //Accessing Pharmacy Prescriptions
     @RequestMapping(value="/pharmacy/{username}/prescriptions")
     public String pharmacyPrescriptions(Model model,@PathVariable String username){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.getName().equals(username)){
-            if (authentication == null){
-                System.out.println("Authentication is null");
-            }
-            else{
-                System.out.println(username);
-                System.out.println(authentication.getName());
-            }
-            return "redirect:/login?loginagain";
-        }
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
         return "Pharmacy/pharmacy-prescriptions";
     }
 
@@ -101,17 +86,7 @@ public class pharmacyController {
     //Accessing Pharmacy Profile
     @RequestMapping(value="/pharmacy/{username}/profile")
     public String pharmacyProfile(Model model,@PathVariable String username){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.getName().equals(username)){
-            if (authentication == null){
-                System.out.println("Authentication is null");
-            }
-            else{
-                System.out.println(username);
-                System.out.println(authentication.getName());
-            }
-            return "redirect:/login?loginagain";
-        }
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
         Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
         String profilePicture = "/images/" + pharmacy.getProfilepicture();
         Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, pharmacyService.getFields());
@@ -126,24 +101,8 @@ public class pharmacyController {
     //Dashboard for seconds
     @RequestMapping(value="/pharmacy/{username}",method = RequestMethod.GET)
     String urlDashboard(Model model){
+        if (Auth(model)) return "redirect:/login";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            System.out.println("Authenticated User: " + authentication.getName());
-            System.out.println("Authenticated User roles: " + authentication.getAuthorities());
-        }
-        if (authentication != null){
-            String username = authentication.getName();
-            Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-            String profilepicture = "/images/" + pharmacy.getProfilepicture();
-
-            String[] fields = pharmacyService.getFields();
-            Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
-            pharmacyDict.put("profilepic",profilepicture);
-            model.addAttribute("pharmacy",pharmacyDict);
-        }
-        else{
-            return "redirect:/login";
-        }
         String username = authentication.getName();
         Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
 

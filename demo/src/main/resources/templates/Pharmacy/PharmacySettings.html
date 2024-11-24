@@ -47,10 +47,11 @@
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Overview</a>
+    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i></i>  Overview</a>
     <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
-    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i> Inventory   </a>
+    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>Inventory   </a>
     <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Prescriptions</a>
+    <a th:href="@{/pharmacy/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-eye fa-fw"></i>  Settings</a>
   </div>
 </nav>
 
@@ -63,155 +64,84 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> My Inventory</b></h5>
+    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
   </header>
 
+
+
   <div class="w3-container">
-    <h5>Manage Inventory</h5>
-    <form id="inventoryForm">
-      <input type="hidden" id="inventoryID" name="inventoryID">
+    <h5>Settings</h5>
+    <form id = "patientSettingsForm" th:action = "@{/pharmacy/settings(username=${pharmacy.username})}" method = "POST" enctype="multipart/form-data">
       <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
         <tr>
-          <td>Medicine ID</td>
+          <td>Change Profile Picture</td>
+          <td><input class="w3-input w3-border w3-round" type="file" name = "profilepicture"></td>
+        </tr>
+        <tr>
+          <td>Change Username</td>
+          <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Username" pattern = "^[a-zA-Z]+.$" name = "username"></td>
+        </tr>
+        <tr>
+          <td>Change Name</td>
           <td>
-            <input class="w3-input w3-border w3-round" type="text" id="medID" name="medID" placeholder="Enter Medicine ID" required>
+            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
+            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
+            <input class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">
           </td>
         </tr>
         <tr>
-          <td>Price</td>
+          <td>Change Phone Number</td>
+          <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Phone Number" name = "pno"></td>
+        </tr>
+        <tr>
+          <td>Change Password</td>
           <td>
-            <input class="w3-input w3-border w3-round" type="number" id="price" name="price" placeholder="Enter Price" required>
+            <input class="w3-input w3-border w3-round w3-margin-bottom" name = "Password" type="text" placeholder="Password" id = "passwrd" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onfocus = "pupd('focus')" onblur = "pupd('blur')" onkeyup = "pchek(this.value)" onChange = "match()">
+            <input class="w3-input w3-border w3-round w3-right" id = "cpasswrd" type="text" placeholder="Confirm Password">
           </td>
         </tr>
         <tr>
-          <td>Expiry Date</td>
-          <td>
-            <input class="w3-input w3-border w3-round" type="date" id="expiryDate" name="expiryDate" required>
-          </td>
+          <td>Change Address</td>
+          <td><input class="w3-input w3-border w3-round w3-right" name = "address" type="text" placeholder="Enter new Address"></td>
         </tr>
         <tr>
-          <td>Quantity In Stock</td>
+          <td>Enter Bloodtype</td>
+          <td><input class="w3-input w3-border w3-round w3-right" name = "bloodtype" type="text" placeholder="Enter Bloodtype"></td>
+        </tr>
+        <tr>
+          <td>Change BMI Information</td>
           <td>
-            <input class="w3-input w3-border w3-round" type="number" id="quantityInStock" name="quantityInStock" placeholder="Enter Quantity" required>
+            <input class="w3-input w3-border w3-round w3-right" name = "height" type="text" placeholder="Height">
+            <input class="w3-input w3-border w3-round w3-right" name = "weight" type="text" placeholder="Weight">
           </td>
         </tr>
-      </table>
-      <br>
-      <button class="w3-button w3-dark-grey" type="button" id="addBtn">Add</button>
-      <button class="w3-button w3-blue-grey" type="button" id="updateBtn">Update</button>
-      <button class="w3-button w3-red" type="button" id="deleteBtn">Delete</button>
+      </table><br>
+      <div id = "pcheck" >
+        <h3>Password must contain the following:</h3>
+        <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+        <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+        <p id="number" class="invalid">A <b>number</b></p>
+        <p id="spchar" class="invalid">A <b>special charecter</b></p>
+        <p id="lengt" class="invalid">Minimum <b>8 characters</b></p>
+      </div>
+      <button class="w3-button w3-dark-grey" id="saveSettings">Apply Changes <i class="fa fa-arrow-right"></i></button>
     </form>
     <div id="responseMessage"></div>
-    <hr>
-    <div>
-      <h5>Inventory List</h5>
-      <table id="inventoryTable" class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Medicine ID</th>
-          <th>Price</th>
-          <th>Expiry Date</th>
-          <th>Quantity</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Inventory items will be dynamically populated here -->
-        </tbody>
-      </table>
-    </div>
   </div>
+  <hr>
+  <hr>
 
-  <script>
-    $(document).ready(function () {
-      // Fetch and populate inventory items
-      fetchInventory();
+  <br>
 
-      // Add inventory
-      $("#addBtn").on("click", function () {
-        const data = $("#inventoryForm").serialize();
-        $.post(`/api/inventory/add`, data, function (response) {
-          $("#responseMessage").text("Inventory added successfully!");
-          fetchInventory();
-        }).fail(function (xhr) {
-          $("#responseMessage").text("Error: " + xhr.responseText);
-        });
-      });
 
-      // Update inventory
-      $("#updateBtn").on("click", function () {
-        const id = $("#inventoryID").val();
-        if (!id) {
-          alert("Select an item to update.");
-          return;
-        }
-        const data = $("#inventoryForm").serialize();
-        $.ajax({
-          url: `/api/inventory/update/${id}`,
-          type: "PUT",
-          data: data,
-          success: function () {
-            $("#responseMessage").text("Inventory updated successfully!");
-            fetchInventory();
-          },
-          error: function (xhr) {
-            $("#responseMessage").text("Error: " + xhr.responseText);
-          }
-        });
-      });
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <h4>FOOTER</h4>
+    <p>Powered by <a href="#hehe" target="_blank">nipunmeegoda</a></p>
+  </footer>
 
-      // Delete inventory
-      $("#deleteBtn").on("click", function () {
-        const id = $("#inventoryID").val();
-        if (!id) {
-          alert("Select an item to delete.");
-          return;
-        }
-        $.ajax({
-          url: `/api/inventory/delete/${id}`,
-          type: "DELETE",
-          success: function () {
-            $("#responseMessage").text("Inventory deleted successfully!");
-            fetchInventory();
-          },
-          error: function (xhr) {
-            $("#responseMessage").text("Error: " + xhr.responseText);
-          }
-        });
-      });
-
-      // Populate form on item selection
-      $("#inventoryTable").on("click", ".editBtn", function () {
-        const row = $(this).closest("tr");
-        $("#inventoryID").val(row.find(".id").text());
-        $("#medID").val(row.find(".medID").text());
-        $("#price").val(row.find(".price").text());
-        $("#expiryDate").val(row.find(".expiryDate").text());
-        $("#quantityInStock").val(row.find(".quantity").text());
-      });
-    });
-
-    function fetchInventory() {
-      $.get(`/api/inventory/all`, function (response) {
-        const tableBody = $("#inventoryTable tbody");
-        tableBody.empty();
-        response.forEach(item => {
-          tableBody.append(`
-                    <tr>
-                        <td class="id">${item.inventoryID}</td>
-                        <td class="medID">${item.medID}</td>
-                        <td class="price">${item.price}</td>
-                        <td class="expiryDate">${item.expiryDate}</td>
-                        <td class="quantity">${item.quantityInStock}</td>
-                        <td><button class="w3-button w3-blue editBtn">Edit</button></td>
-                    </tr>
-                `);
-        });
-      });
-    }
-  </script>
-
+  <!-- End page content -->
+</div>
 
 <script>
   // Get the Sidebar
@@ -300,7 +230,7 @@
       var formData = new FormData($("#pharmacySettingsForm")[0]);
 
       $.ajax({
-        url: '/patient/settings', // Replace "johndoe" with the actual username
+        url: '/pharmacy/settings', // Replace "johndoe" with the actual username
         type: 'POST',
         data: formData,
         contentType: false,
@@ -315,7 +245,7 @@
               $("#profilePicturePreview").attr("src", e.target.result);
             }
             reader.readAsDataURL(fileInput.files[0]);
-            window.location.href = "/patient/settings";
+            window.location.href = "/pharmacy/settings";
           }
         },
         error: function (xhr, status, error) {

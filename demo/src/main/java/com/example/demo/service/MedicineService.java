@@ -35,6 +35,10 @@ public class MedicineService {
         return medicineRepo.findAll();
     }
 
+    public Medicine findById(Long id) {
+        return medicineRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
+    }
 
 
     @Autowired

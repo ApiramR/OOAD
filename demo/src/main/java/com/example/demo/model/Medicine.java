@@ -38,7 +38,6 @@ public class Medicine {
 
 
 
-
     public List<Inventory> getInventories() {
         return inventories;
     }

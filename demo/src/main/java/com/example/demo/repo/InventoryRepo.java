@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/*
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Long> {
     @Query("SELECT i.medicine FROM Inventory i WHERE i.inventoryID = :inventoryId")
@@ -17,4 +18,12 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
     @Query("SELECT i FROM Inventory i WHERE i.medicine.medID = :medicineId")
     List<Inventory> findInventoriesByMedicineId(@Param("medicineId") Long medicineId);
     
+}
+
+ */
+
+@Repository
+public interface InventoryRepo extends JpaRepository<Inventory, Long> {
+    @Query("SELECT i FROM Inventory i WHERE i.pharmacy.id = :pharmacyId")
+    List<Inventory> findByPharmacyId(@Param("pharmacyId") Long pharmacyId);
 }

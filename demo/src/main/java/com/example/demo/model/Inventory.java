@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-
+/*
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,4 +41,36 @@ public class Inventory {
 
     public Inventory(int inventoryID, Long medID, long price, LocalDate expiryDate, int quantityInStock) {
     }
+} */
+
+@Entity
+@Table(name = "Inventory")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Inventory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long inventoryID;
+
+    @Column(nullable = false)
+    private long price;
+
+    @Column(nullable = false)
+    private LocalDate expiryDate;
+
+    @Column(nullable = false)
+    private int quantityInStock;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "medID", nullable = false)
+    private Medicine medicine;
+
+    @ManyToOne
+    @JoinColumn(name = "pharmacy_id", nullable = false)
+    private Pharmacy pharmacy;
+
 }
+

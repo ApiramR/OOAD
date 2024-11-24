@@ -1,22 +1,29 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.model.Patient;
 import com.example.demo.model.Pharmacy;
 import com.example.demo.service.ModelMapperUtil;
 import com.example.demo.service.PharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Map;
-
 
 
 
@@ -31,7 +38,14 @@ public class pharmacyController {
     public pharmacyController(PharmacyService pharmacyService) {
         this.pharmacyService = pharmacyService;
     }
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
+    @Value("${file.upload-dir2}")
+    private String imageuploaddir;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @RequestMapping(value="/pharmacy",method = RequestMethod.GET)
@@ -110,6 +124,99 @@ public class pharmacyController {
         Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
 
         return "/Pharmacy/pharmacy-dashboard";
+    }
+
+    @GetMapping(value="/pharmacy/settings")
+    public String patientSettings(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null){
+            return "redirect:/login?loginagain";
+        }
+        String username = authentication.getName();
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        initialize(username, model, pharmacy);
+        return "PatientSettings.html";
+    }
+
+
+    @PostMapping("/pharmacy/settings")
+    @ResponseBody
+    public ResponseEntity<?> PharmacyChangeSettings(@RequestParam Map<String, String> formData, @RequestParam(value = "profilepicture", required = false) MultipartFile file){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
+        }
+        String username = authentication.getName();
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        if (file != null){
+            String currentReportpath = imageuploaddir + pharmacy.getProfilepicture();
+            File currentpicture = new File(currentReportpath);
+            if (currentpicture.exists()){
+                System.out.println("Why its not deletingggg");
+                currentpicture.delete();
+            }
+            long l = System.currentTimeMillis();
+            String s = l + "";
+            String filename = 'a' + s + '_' + file.getOriginalFilename();
+            System.out.println(file.getOriginalFilename());
+            File directory = new File(imageuploaddir);
+            if (!directory.exists()){
+                directory.mkdirs();
+            }
+            try{
+                File destinationFile = new File(directory,filename);
+                pharmacy.setProfilepicture(filename);
+                file.transferTo(destinationFile);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            for (Map.Entry<String, String> column : formData.entrySet()) {
+                String fieldName = column.getKey();
+                Object fieldValue = column.getValue();
+                if (fieldName.equals("profilepicture")){
+                    continue;
+                }
+                if (fieldValue == null)continue;
+                if (fieldValue.equals(""))continue;
+                System.out.println(fieldName + " " + (String)fieldValue);
+                String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
+                String res = (String)fieldValue;
+                if (fieldName.equals("Password")){
+                    System.out.println(res);
+                    res = passwordEncoder.encode(res);
+                    System.out.println(res);
+                }
+                else if (fieldName.equals("height") || fieldName.equals("weight")){
+                    Method setter = Pharmacy.class.getMethod(methodName, Double.class);
+                    setter.invoke(pharmacy,Double.parseDouble(res));
+                    continue;
+                }
+                Method setter = Pharmacy.class.getMethod(methodName, String.class);
+                setter.invoke(pharmacy,res);
+            }
+        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
+        }
+        pharmacyService.updatePharmacy(pharmacy);
+        return ResponseEntity.ok("Update successful");
+    }
+
+
+
+    @RequestMapping(value = "/pharmacy/debug", method = RequestMethod.GET)
+    public String debugPatientAccess() {
+        return "Debugging Pharmacy Access";
+    }
+    public void initialize(String username,Model model,Pharmacy pharmacy){
+        String profilepicpath = "/images/";
+        String profilepicture = profilepicpath + pharmacy.getProfilepicture();
+        String[] fields = pharmacyService.getFields();
+        Map<String, Object> patientDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
+        patientDict.put("profilepic",profilepicture);
+        model.addAttribute("patient",patientDict);
     }
 
 }

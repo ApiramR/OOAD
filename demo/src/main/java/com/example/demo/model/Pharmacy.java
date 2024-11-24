@@ -32,5 +32,6 @@ public class Pharmacy extends Userr {
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventory> inventories; // One Pharmacy with Many Inventories
-    
+
+
 }

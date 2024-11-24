@@ -21,15 +21,16 @@
           integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
           crossorigin="anonymous">
   </script>
-
 </head>
+
+
+
 <body class="w3-light-grey">
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right"><a href = "/logout">Logout</a></span>
 </div>
-
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
@@ -51,12 +52,13 @@
     <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
     <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>Inventory   </a>
     <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Prescriptions</a>
+    <a th:href="@{/pharmacy/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Settings</a>
   </div>
 </nav>
-
-
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
@@ -66,11 +68,7 @@
     <h5><b><i class="fa fa-dashboard"></i> Inventory Manager</b></h5>
   </header>
 
-
-
-
-
-
+  <input type="hidden" id="pharmacyID" name="pharmacyID" value="${pharmacy.id}">
 
 
   <hr>
@@ -118,109 +116,21 @@
         <tr>
           <th>ID</th>
           <th>Medicine ID</th>
+          <th>Medicine Name</th>
+          <th>Strength</th>
           <th>Price</th>
           <th>Expiry Date</th>
           <th>Quantity</th>
           <th>Actions</th>
         </tr>
         </thead>
+
         <tbody>
         <!-- Inventory items will be dynamically populated here -->
         </tbody>
       </table>
     </div>
   </div>
-
-  <script>
-    $(document).ready(function () {
-      // Fetch and populate inventory items
-      fetchInventory();
-
-      // Add inventory
-      $("#addBtn").on("click", function () {
-        const data = $("#inventoryForm").serialize();
-        $.post(`/api/inventory/add`, data, function (response) {
-          $("#responseMessage").text("Inventory added successfully!");
-          fetchInventory();
-        }).fail(function (xhr) {
-          $("#responseMessage").text("Error: " + xhr.responseText);
-        });
-      });
-
-      // Update inventory
-      $("#updateBtn").on("click", function () {
-        const id = $("#inventoryID").val();
-        if (!id) {
-          alert("Select an item to update.");
-          return;
-        }
-        const data = $("#inventoryForm").serialize();
-        $.ajax({
-          url: `/api/inventory/update/${id}`,
-          type: "PUT",
-          data: data,
-          success: function () {
-            $("#responseMessage").text("Inventory updated successfully!");
-            fetchInventory();
-          },
-          error: function (xhr) {
-            $("#responseMessage").text("Error: " + xhr.responseText);
-          }
-        });
-      });
-
-      // Delete inventory
-      $("#deleteBtn").on("click", function () {
-        const id = $("#inventoryID").val();
-        if (!id) {
-          alert("Select an item to delete.");
-          return;
-        }
-        $.ajax({
-          url: `/api/inventory/delete/${id}`,
-          type: "DELETE",
-          success: function () {
-            $("#responseMessage").text("Inventory deleted successfully!");
-            fetchInventory();
-          },
-          error: function (xhr) {
-            $("#responseMessage").text("Error: " + xhr.responseText);
-          }
-        });
-      });
-
-      // Populate form on item selection
-      $("#inventoryTable").on("click", ".editBtn", function () {
-        const row = $(this).closest("tr");
-        $("#inventoryID").val(row.find(".id").text());
-        $("#medID").val(row.find(".medID").text());
-        $("#price").val(row.find(".price").text());
-        $("#expiryDate").val(row.find(".expiryDate").text());
-        $("#quantityInStock").val(row.find(".quantity").text());
-      });
-    });
-
-    function fetchInventory() {
-      $.get(`/api/inventory/all`, function (response) {
-        const tableBody = $("#inventoryTable tbody");
-        tableBody.empty();
-        response.forEach(item => {
-          tableBody.append(`
-                    <tr>
-                        <td class="id">${item.inventoryID}</td>
-                        <td class="medID">${item.medID}</td>
-                        <td class="price">${item.price}</td>
-                        <td class="expiryDate">${item.expiryDate}</td>
-                        <td class="quantity">${item.quantityInStock}</td>
-                        <td><button class="w3-button w3-blue editBtn">Edit</button></td>
-                    </tr>
-                `);
-        });
-      });
-    }
-  </script>
-
-
 
   <br>
   <div class="w3-container w3-dark-grey w3-padding-32">
@@ -257,28 +167,129 @@
 </div>
 
 <script>
-  // Get the Sidebar
-  var mySidebar = document.getElementById("mySidebar");
+  $(document).ready(function () {
+    fetchInventory();
 
-  // Get the DIV with overlay effect
-  var overlayBg = document.getElementById("myOverlay");
+    $("#addBtn").on("click", function () {
+      const data = {
+        medicine: {
+          medID: $("#medID").val()
+        },
+        price: $("#price").val(),
+        expiryDate: $("#expiryDate").val(),
+        quantityInStock: $("#quantityInStock").val(),
+        pharmacyID: $("#pharmacyID").val() // Include pharmacyID
+      };
 
-  // Toggle between showing and hiding the sidebar, and add overlay effect
-  function w3_open() {
-    if (mySidebar.style.display === 'block') {
-      mySidebar.style.display = 'none';
-      overlayBg.style.display = "none";
-    } else {
-      mySidebar.style.display = 'block';
-      overlayBg.style.display = "block";
+
+      $.ajax({
+        url: '/api/inventory/add',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function () {
+          $("#responseMessage").text("Inventory added successfully!");
+          resetForm();
+          fetchInventory();
+        },
+        error: function (xhr) {
+          const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
+          $("#responseMessage").text("Error: " + errorMessage);
+        }
+      });
+    });
+
+    $("#updateBtn").on("click", function () {
+      const data = {
+        medicine: {
+          medID: $("#medID").val()
+        },
+        price: $("#price").val(),
+        expiryDate: $("#expiryDate").val(),
+        quantityInStock: $("#quantityInStock").val(),
+        pharmacyID: $("#pharmacyID").val() // Include pharmacyID
+      };
+
+      $.ajax({
+        url: `/api/inventory/update/${id}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function () {
+          $("#responseMessage").text("Inventory updated successfully!");
+          resetForm();
+          fetchInventory();
+        },
+        error: function (xhr) {
+          const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
+          $("#responseMessage").text("Error: " + errorMessage);
+        }
+      });
+    });
+
+    $("#deleteBtn").on("click", function () {
+      const id = $("#inventoryID").val();
+      if (!id) {
+        alert("Select an item to delete.");
+        return;
+      }
+      if (confirm("Are you sure you want to delete this item?")) {
+        $.ajax({
+          url: `/api/inventory/delete/${id}`,
+          type: 'DELETE',
+          success: function () {
+            $("#responseMessage").text("Inventory deleted successfully!");
+            resetForm();
+            fetchInventory();
+          },
+          error: function (xhr) {
+            const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
+            $("#responseMessage").text("Error: " + errorMessage);
+          }
+        });
+      }
+    });
+
+    $("#inventoryTable").on("click", ".editBtn", function () {
+      const row = $(this).closest("tr");
+      $("#inventoryID").val(row.find(".id").text());
+      $("#medID").val(row.find(".medID").text());
+      $("#price").val(row.find(".price").text());
+      $("#expiryDate").val(row.find(".expiryDate").text());
+      $("#quantityInStock").val(row.find(".quantity").text());
+    });
+
+    function fetchInventory() {
+      $.get('/api/inventory/all', function (response) {
+        const tableBody = $("#inventoryTable tbody");
+        tableBody.empty();
+        if (response.length === 0) {
+          tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
+        } else {
+          response.forEach(item => {
+            tableBody.append(`
+                        <tr>
+                            <td class="id">${item.inventoryID}</td>
+                            <td class="medID">${item.medID}</td>
+                            <td class="medicineName">${item.medicineName}</td>
+                            <td class="strength">${item.strength}</td>
+                            <td class="price">${item.price}</td>
+                            <td class="expiryDate">${item.expiryDate}</td>
+                            <td class="quantity">${item.quantityInStock}</td>
+                            <td><button class="w3-button w3-blue editBtn">Edit</button></td>
+                        </tr>
+                    `);
+          });
+        }
+      });
     }
-  }
 
-  // Close the sidebar with the close button
-  function w3_close() {
-    mySidebar.style.display = "none";
-    overlayBg.style.display = "none";
-  }
+    function resetForm() {
+      $("#inventoryForm")[0].reset();
+      $("#inventoryID").val("");
+    }
+  });
+
 </script>
 
 </body>

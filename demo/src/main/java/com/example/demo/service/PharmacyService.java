@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.model.Medicine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import jakarta.persistence.metamodel.EntityType;
 public class PharmacyService {
     @Autowired
     PharmacyRepo rep;
+    @Autowired
+    private PharmacyRepo pharmacyRepo;
 
     public String addPharmacy(Pharmacy pharmacy){
         if (rep.findByUsernameAndTyp(pharmacy.getUsername(),pharmacy.getTyp()) != null){
@@ -67,5 +70,11 @@ public class PharmacyService {
             columnNames.add(attribute.getName());
         }
         return columnNames.toArray(new String[0]);
+    }
+
+
+    public Pharmacy findById(Long id) {
+        return pharmacyRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
     }
 }

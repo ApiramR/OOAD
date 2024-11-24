@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.repo.InventoryRepo;
 import com.example.demo.model.Inventory;
 
-
+/*
 @Service
 public class InventoryService {
 
@@ -25,4 +25,32 @@ public class InventoryService {
         return inventoryRepo.findInventoriesByMedicineId(medicineId);
     }
 
+}
+*/
+
+@Service
+public class InventoryService {
+
+    @Autowired
+    private InventoryRepo inventoryRepo;
+
+    public Inventory addInventory(Inventory inventory) {
+        return inventoryRepo.save(inventory); // Save Inventory with valid Medicine
+    }
+
+    public Inventory updateInventory(Inventory inventory) {
+        return inventoryRepo.save(inventory);
+    }
+
+    public void deleteInventory(Long id) {
+        inventoryRepo.deleteById(id);
+    }
+
+    public Inventory findById(Long id) {
+        return inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException("Inventory not found"));
+    }
+
+    public List<Inventory> getAllInventory() {
+        return inventoryRepo.findAll();
+    }
 }

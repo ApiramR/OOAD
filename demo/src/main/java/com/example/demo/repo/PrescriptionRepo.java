@@ -3,9 +3,8 @@ package com.example.demo.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.Report;
+import com.example.demo.model.Prescription;
 
 @Repository
-public interface ReportRepo extends JpaRepository<Report, Long> {
-    Report findByTitle(String title);
+public interface PrescriptionRepo extends JpaRepository<Prescription , Long>{
 }

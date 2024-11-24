@@ -2,8 +2,6 @@ package com.example.demo.model;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -22,6 +20,7 @@ public class Userr {
     @Column(nullable = false)
     private String Fname;
     
+    @Column
     private String Mname;
 
     @Column(nullable = false)
@@ -51,7 +50,7 @@ public class Userr {
     @Column(nullable = false)
     private String Password;
 
-    @Column(nullable = false)
+    @Column()
     private String profilepicture;
 
     @PrePersist

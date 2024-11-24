@@ -64,6 +64,9 @@
                         <input type = "password" name = "cpasswrd" id = "cpasswrd" placeholder = "Confirm Password" autocomplete = "off" required title = "Must match with password" onChange = "match()">
                     </div>
                     <input class = "btn-rgstr" type = "submit" value = "Submit">
+                    <hr>
+                    <label>Already have an account?</label>
+                    <a href = "/login">Sign In</a>
                 </div>
             </div>
         </form>
@@ -101,10 +104,28 @@
                 const input = document.createElement('input');
                 input.setAttribute('type', 'text');
                 input.setAttribute('id', 'openinghour');
-                input.setAttribute('name', 'openingHour');
+                input.setAttribute('name', 'openingHours');
                 input.setAttribute('placeholder', 'Enter the Opening hour');
                 input.setAttribute('required', true);
                 field.appendChild(input);
+            }
+            else if (role === "Patient"){
+                const input = document.createElement('input');
+                const input2 = document.createElement('input');
+                input.setAttribute('type', 'number');
+                input.setAttribute('id', 'height');
+                input.setAttribute('name', 'height');
+                input.setAttribute('placeholder', 'Enter the height');
+                input.setAttribute('step',0.01);
+                input.setAttribute('required', true);
+                field.appendChild(input);
+                input2.setAttribute('type', 'number');
+                input2.setAttribute('id', 'weight');
+                input2.setAttribute('name', 'weight');
+                input2.setAttribute('placeholder', 'Enter the weight');
+                input2.setAttribute('step',0.01);
+                input2.setAttribute('required', true);
+                field.appendChild(input2);
             }
             else{
                 field.innerHTML="";

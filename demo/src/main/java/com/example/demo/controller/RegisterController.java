@@ -127,6 +127,13 @@ public class RegisterController {
                         setter.invoke(patient, dob);
                         continue;
                     }
+                    else if (field.equals("height") || field.equals("weight")){
+                        Method setter = Patient.class.getMethod(methodName, Double.class);
+                        String resStr = formData.get(field);
+                        Double res = Double.parseDouble(resStr);
+                        setter.invoke(patient, res);
+                        continue;
+                    }
                     String res = formData.get(field);
                     if (field.equals("Password")){
                         System.out.println(res);

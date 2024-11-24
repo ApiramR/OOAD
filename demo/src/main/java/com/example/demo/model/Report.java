@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,23 +24,17 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ReportID;
 
-    @Column()
+    @Column(nullable = false, unique = true)
     private String title;
 
     @Column()
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     @Column()
-    private LocalDateTime updatedDate;
+    private String updatedDate;
 
     @Column()
     private Long DocID;
-
-    @Column()
-    private Long PatientID;
-
-    @Column()
-    private String ReportType;
 
     @Column()
     private String Reportfile;

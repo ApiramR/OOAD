@@ -43,8 +43,8 @@ public class PatientService {
         return "success";
     }
     
-    public void updatePatient(Patient patient){
-        rep.save(patient);
+    public Patient updatePatient(Patient patient){
+        return rep.save(patient);
     }
 
     public Patient getPatientByID(int patientID){

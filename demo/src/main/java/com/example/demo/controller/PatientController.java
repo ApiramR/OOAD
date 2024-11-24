@@ -2,9 +2,6 @@ package com.example.demo.controller;
 
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.HashMap;
@@ -19,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,9 +45,6 @@ public class PatientController {
 
     @Autowired
     private ReportService reportService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -199,7 +192,7 @@ public class PatientController {
             return ResponseEntity.ok(response);
         }
         else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");;    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
     }
     @RequestMapping(value = "/patient/debug", method = RequestMethod.GET)

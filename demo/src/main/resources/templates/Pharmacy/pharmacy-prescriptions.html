@@ -49,10 +49,9 @@
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
 
         <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">  Overview  </a>
-        <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Profile   </a>
-        <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Inventory & Medicine  </a>
         <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding w3-blue">Prescriptions </a>
-        <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Settings  </a>
+        <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Inventory & Medicine  </a>
+        <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Profile Settings  </a>
 
     </div>
 </nav>

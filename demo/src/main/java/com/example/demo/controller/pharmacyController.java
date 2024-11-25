@@ -77,6 +77,18 @@ public class pharmacyController {
         return "Pharmacy/pharmacy-inventory";
     }
 
+    @RequestMapping(value="/pharmacy/{username}/ordermedicine")
+    public String pharmacyOrderMedicine(Model model,@PathVariable String username){
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        String profilePicture = "/images/" + pharmacy.getProfilepicture();
+        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, pharmacyService.getFields());
+        pharmacyDict.put("profilepic",profilePicture);
+        model.addAttribute("pharmacy",pharmacyDict);
+        model.addAttribute("age",Period.between(pharmacy.getDOB(), LocalDate.now()).getYears());
+        return "Pharmacy/pharmacy-ordermedicine";
+    }
+
     @RequestMapping(value="/pharmacy/{username}/prescriptions",method = RequestMethod.GET)
     String pharmacyPrescriptions(Model model){
         if (Auth(model)) return "redirect:/login";

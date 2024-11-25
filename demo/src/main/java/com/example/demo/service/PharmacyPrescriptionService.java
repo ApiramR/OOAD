@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-
+import java.lang.reflect.Field;
 import com.example.demo.model.PharmacyPrescription;
 import com.example.demo.repo.PharmacyPrescriptionRepo;
 import com.example.demo.repo.PrescriptionRepo;
@@ -44,4 +44,15 @@ public class PharmacyPrescriptionService {
         pharmacyPrescription.setIsCompleted(true);
         repository.save(pharmacyPrescription);
     }
+
+
+    public long countIsReadyTrue() {
+        return PharmacyPrescriptionRepo.countIsReadyTrue();
+    }
+
+
+    public long countIsCompletedTrue() {
+        return PharmacyPrescriptionRepo.countIsCompletedTrue();
+    }
+
 }

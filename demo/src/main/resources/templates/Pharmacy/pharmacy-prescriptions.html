@@ -90,7 +90,7 @@
                     <p id="orderCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
                 <div class="w3-clear"></div>
-                <h4>Orders Completed</h4>
+                <h4>Prescriptions Completed</h4>
             </div>
         </div>
         <div class="w3-quarter">
@@ -105,8 +105,31 @@
     </div>
 
     <hr>
+    <table class="w3-table w3-striped w3-white" id="pharmacyPrescriptionTable">
+        <thead>
+        <tr>
+            <th>Prescription ID</th>
+            <th>Patient Name</th>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Is Ready</th>
+            <th>Is Completed</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="instance : ${prescriptions}">
+            <td th:text="${instance.prescription.presID}">Prescription ID</td>
+            <td th:text="${instance.prescription.patient.Fname} + ' ' + (${instance.prescription.patient.Mname != null && instance.prescription.patient.Mname != '' ? instance.prescription.patient.Mname + ' ' : ''}) + ${instance.prescription.patient.Lname}">Patient Name</td>
+            <td th:text="${instance.prescription.meds}">Medication</td>
+            <td th:text="${instance.prescription.dosage}">Dosage</td>
+            <td th:text="${instance.isReady ? 'Yes' : 'No'}">Is Ready</td>
+            <td th:text="${instance.isCompleted ? 'Yes' : 'No'}">Is Completed</td>
+        </tr>
+        </tbody>
+    </table>
 
 
+<hr>
 
 
 
@@ -140,6 +163,9 @@
         fetchPrescriptionPrepareCount();
         fetchPrescriptionReadyCountCount();
         fetchOrderCount();
+        fetchPrescriptions()
+
+
 
     });
     // Get the Sidebar
@@ -206,7 +232,7 @@
 
     function fetchOrderCount() {
         $.ajax({
-            url: '/api/prescriptions/order/count',
+            url: '/api/prescriptions/completed/count',
             type: 'GET',
             success: function (count) {
                 $("#orderCount").text(count);

@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 import java.lang.reflect.Field;
+
+import com.example.demo.model.Inventory;
 import com.example.demo.model.PharmacyPrescription;
+import com.example.demo.model.Prescription;
 import com.example.demo.repo.PharmacyPrescriptionRepo;
 import com.example.demo.repo.PrescriptionRepo;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +18,8 @@ public class PharmacyPrescriptionService {
 
     @Autowired
     private static PrescriptionRepo prescriptionRepo;
+    private final PharmacyPrescriptionRepo pharmacyPrescriptionRepo;
+
 
     public static long countAllPrescriptionsPrepare() {
             return prescriptionRepo.count();
@@ -30,9 +35,10 @@ public class PharmacyPrescriptionService {
 
     private final PharmacyPrescriptionRepo repository;
 
-    public PharmacyPrescriptionService(PharmacyPrescriptionRepo repository) {
-        this.repository = repository;
+    public List<PharmacyPrescription> getAllPrescriptions() {
+        return pharmacyPrescriptionRepo.findAll();
     }
+
 
     public List<PharmacyPrescription> getReadyOrders(Long pharmacyID) {
         return repository.findByPharmacy_PharmacyIDAndIsReady(pharmacyID, true);
@@ -45,14 +51,26 @@ public class PharmacyPrescriptionService {
         repository.save(pharmacyPrescription);
     }
 
+    public List<PharmacyPrescription> getPrescriptionsByPharmacyID(Long pharmacyID) {
+        return repository.findAllByPharmacyID(pharmacyID);
+    }
+
+
+
+
+    @Autowired
+    public PharmacyPrescriptionService(PharmacyPrescriptionRepo repository, PharmacyPrescriptionRepo pharmacyPrescriptionRepo) {
+        this.repository = repository;
+        this.pharmacyPrescriptionRepo = pharmacyPrescriptionRepo;
+    }
 
     public long countIsReadyTrue() {
-        return PharmacyPrescriptionRepo.countIsReadyTrue();
+        return repository.countIsReadyTrue()-repository.countIsCompletedTrue();
     }
-
 
     public long countIsCompletedTrue() {
-        return PharmacyPrescriptionRepo.countIsCompletedTrue();
+        return repository.countIsCompletedTrue();
     }
+
 
 }

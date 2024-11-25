@@ -54,7 +54,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countInventoryItems() {
+    public ResponseEntity<Long> countPrescription() {
         try {
             long itemCount = prescriptionService.countAllPrescriptions();
             return ResponseEntity.ok(itemCount);

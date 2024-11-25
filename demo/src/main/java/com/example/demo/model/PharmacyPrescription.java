@@ -27,4 +27,6 @@ public class PharmacyPrescription {
 
     @Column(name = "is_completed")
     private Boolean isCompleted = false;
+
+
 }

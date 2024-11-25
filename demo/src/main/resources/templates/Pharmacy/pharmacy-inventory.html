@@ -112,6 +112,7 @@
 
 
     </form>
+
     <div id="responseMessage"></div>
     <hr>
     <div>
@@ -353,16 +354,19 @@
       $("#quantityInStock").val(row.find(".quantity").text());
     });
 
-    // Fetch inventory
-    function fetchInventory() {
-      $.get('/api/inventory/all', function (response) {
-        const tableBody = $("#inventoryTable tbody");
-        tableBody.empty();
-        if (response.length === 0) {
-          tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
-        } else {
-          response.forEach(item => {
-            tableBody.append(`
+
+  });
+
+  // Fetch inventory
+  function fetchInventory() {
+    $.get('/api/inventory/all', function (response) {
+      const tableBody = $("#inventoryTable tbody");
+      tableBody.empty();
+      if (response.length === 0) {
+        tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
+      } else {
+        response.forEach(item => {
+          tableBody.append(`
                     <tr>
                         <td class="id">${item.inventoryID}</td>
                         <td class="medID">${item.medID}</td>
@@ -374,13 +378,10 @@
                         <td><button class="w3-button w3-blue editBtn">Edit</button></td>
                     </tr>
                 `);
-          });
-        }
-      });
-    }
-
-
-  });
+        });
+      }
+    });
+  }
 </script>
 
 </body>

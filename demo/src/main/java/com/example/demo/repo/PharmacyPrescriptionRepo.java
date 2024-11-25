@@ -3,6 +3,7 @@ package com.example.demo.repo;
 import com.example.demo.model.PharmacyPrescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,14 +20,13 @@ public interface PharmacyPrescriptionRepo extends JpaRepository<PharmacyPrescrip
     List<PharmacyPrescription> findByIsCompleted(Boolean isCompleted);
 
     @Query("SELECT COUNT(p) FROM PharmacyPrescription p WHERE p.isReady = true")
-    static long countIsReadyTrue() {
-        return 0;
-    }
+    long countIsReadyTrue();
 
     @Query("SELECT COUNT(p) FROM PharmacyPrescription p WHERE p.isCompleted = true")
-    static long countIsCompletedTrue() {
-        return 0;
-    }
+    long countIsCompletedTrue();
+
+    @Query("SELECT p FROM PharmacyPrescription  p WHERE p.pharmacy.pharmacyID = :pharmacyID")
+    List<PharmacyPrescription> findAllByPharmacyID(@Param("pharmacyID") Long pharmacyID);
 }
 
 

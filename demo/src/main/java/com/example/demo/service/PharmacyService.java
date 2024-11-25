@@ -1,8 +1,5 @@
 package com.example.demo.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,6 @@ import com.example.demo.repo.PharmacyRepo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.EntityType;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PharmacyService {

@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-
-import com.example.demo.model.Inventory;
 import com.example.demo.model.Medicine;
 import com.example.demo.repo.MedicineRepo;
 import org.springframework.beans.factory.annotation.Autowired;

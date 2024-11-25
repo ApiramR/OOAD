@@ -1,7 +1,6 @@
 package com.example.demo.repo;
 
 import com.example.demo.model.Inventory;
-import com.example.demo.model.Medicine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

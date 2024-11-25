@@ -14,10 +14,17 @@
     </header>
 
     <!-- Navigation Buttons -->
-    <section class="nav-buttons-container">
+    <!-- <section class="nav-buttons-container">
         <a href="patient.html" class="nav-button">Patient Search</a>
         <a href="prescription.html" class="nav-button">Prescriptions</a>
+    </section> -->
+
+    <section class="nav-buttons-container">
+        <a href="/doctor/patient/searchPatient" class="nav-button">Patient Search</a>
+        <a href="/doctor/prescription" class="nav-button">Prescriptions</a>
     </section>
+    
+    
 
     <!-- Footer Section -->
     <footer class="footer-container">
@@ -26,20 +33,22 @@
 
     <!-- JavaScript for Dynamic Doctor Name -->
     <script>
-        // Fetch doctor name from the backend
+        // Fetch doctor username from the backend
         document.addEventListener("DOMContentLoaded", async () => {
+            const doctorId = 123; // Replace with the actual doctor ID, or dynamically fetch it if available
             try {
-                const response = await fetch('/api/doctor/name'); // Backend endpoint to fetch the doctor’s name
+                const response = await fetch(`/doctor/${doctorId}/username`); // Use the correct endpoint with the doctor ID
                 if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('doctor-name').textContent = data.name;
+                    const username = await response.text(); // Fetch plain text response
+                    document.getElementById('doctor-name').textContent = username; // Update the DOM with the username
                 } else {
-                    console.error("Failed to fetch doctor name.");
+                    console.error("Failed to fetch doctor username.");
                 }
             } catch (error) {
-                console.error("Error fetching doctor name:", error);
+                console.error("Error fetching doctor username:", error);
             }
         });
     </script>
+    
 </body>
 </html>

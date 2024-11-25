@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +34,8 @@ public class Prescription {
     */
 
     @ManyToOne
-    @JoinColumn(name="PID",nullable=false)
+    @JoinColumn(name = "patient_id")
+    @JsonBackReference
     private Patient patient;
 
     @Column(nullable=false)
@@ -48,3 +51,6 @@ public class Prescription {
     private String description;
 
 }
+
+
+

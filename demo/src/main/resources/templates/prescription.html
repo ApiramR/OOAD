@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang = "en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Dashboard - Prescriptions</title>
-    <link rel="stylesheet" href="/css/prescription.css">
+    <link rel="stylesheet" type="text/css" href="/css/prescription.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 <body>
@@ -18,73 +17,98 @@
             <div class="search-icon">
                 <i class="fa fa-search"></i> <!-- The search icon -->
             </div>
-            <input type="text" id="searchInput" placeholder="Search by Patient ID..." required />
-            <button id="searchButton" onclick="searchPrescription()">Search</button>
+            <input type="text" id="prescriptionSearchInput" placeholder="Search by Prescription ID..." required />
+            <button onclick="searchPrescription()">Search</button>
         </div>
         
         <section class="prescription-panel">
-            <!-- Prescription Card will be dynamically populated here -->
+            <div class="prescription-card">
+                <div class="prescription-details">
+                    <h3>Prescription Details</h3>
+                    <p><strong>Medication:</strong> <span id="prescriptionMedication"></span></p>
+                    <p><strong>Dosage:</strong> <span id="prescriptionDosage"></span></p>
+                    <p><strong>Date Issued:</strong> <span id="prescriptionDate"></span></p>
+                    <p><strong>Description:</strong> <span id="prescriptionDescription"></span></p>
+        
+                    <!-- Patient Details -->
+                    <h4>Patient Information</h4>
+                    <p><strong>Patient Name:</strong> <span id="patientName"></span></p>
+                    <p><strong>Patient Age:</strong> <span id="patientAge"></span></p>
+                </div>
+        
+                <div class="prescription-actions">
+                    <!-- Update Button -->
+                    <button class="update-btn" onclick="openForm('update', {patientId: 'John Doe', details: 'Paracetamol 500mg - Twice a day', date: '2024-11-23'})">Update</button>
+        
+                    <!-- Delete Button -->
+                    <button class="delete-btn" onclick="deletePrescription()">Delete</button>
+                </div>
+            </div>
         </section>
+        
 
-        <!-- Create Prescription Button -->
+            
+<div class="create-prescription">
+    <button id="createPrescriptionBtn" onclick="openForm('create')">Create Prescription</button>
+</div>
+<!-- Create Prescription Button -->
+
+<!-- Create Prescription Form -->
+<div class="modal-content" id="createForm" style="display: none;">
+    <span class="close-btn" onclick="closeForm()">×</span>
+    <h2>Create Prescription</h2>
+    <form action="/doctor/prescription" method="POST" id="createPrescriptionForm">
+        <label for="patientId">Patient ID:</label>
+        <input type="text" id="createPatientId" name="PID" required>
+
+        <label for="medication">Medication:</label>
+        <textarea id="createMedication" name="meds" rows="2" required></textarea>
+
+        <label for="dosage">Dosage:</label>
+        <textarea id="createDosage" name="dosage" rows="2" required></textarea>
+
+        <label for="description">Description:</label>
+        <textarea id="createDescription" name="description" rows="4" required></textarea>
+
+        <label for="prescriptionDate">Prescription Date:</label>
+        <input type="date" id="createPrescriptionDate" name="dateIssued" required>
+
+        <!-- <button type="submit" id="createFormSubmitBtn">Create</button> -->
         <div class="create-prescription">
-            <button id="createPrescriptionBtn" onclick="openForm('create')">Create Prescription</button>
+            <button type="submit"id="createPrescriptionBtn" onclick="createPrescription()">Create </button>
         </div>
+    </form>
+</div>
 
-        <!-- Create Prescription Form -->
-        <div class="modal-content" id="createForm" style="display: none;">
-            <span class="close-btn" onclick="closeForm()">×</span>
-            <h2>Create Prescription</h2>
-            <form id="createPrescriptionForm">
-                <label for="patientName">Patient ID:</label>
-                <input type="text" id="createPatientName" name="patientName" required>
 
-                <label for="prescriptionDetails">Prescription:</label>
-                <textarea id="createPrescriptionDetails" name="prescriptionDetails" rows="4" required></textarea>
-
-                <label for="dosage">Dosage:</label>
-                <input type="text" id="createDosage" name="dosage" required>
-
-                <label for="description">Description:</label>
-                <textarea id="createDescription" name="description" rows="4" required></textarea>
-
-                <label for="prescriptionDate">Prescription Date:</label>
-                <input type="date" id="createPrescriptionDate" name="prescriptionDate" required>
-
-                <button type="submit" id="createFormSubmitBtn">Create</button>
-            </form>
-        </div>
-
-        <!-- Update Prescription Form -->
-        <div class="modal-content" id="updateForm" style="display: none;">
-            <span class="close-btn" onclick="closeForm()">×</span>
-            <h2>Update Prescription</h2>
-            <form id="updatePrescriptionForm">
-                <input type="hidden" id="updatePrescriptionId" name="prescriptionId">
-                <label for="patientName">Patient Name:</label>
-                <input type="text" id="updatePatientName" name="patientName" required>
-
-                <label for="prescriptionDetails">Prescription Details:</label>
-                <textarea id="updatePrescriptionDetails" name="prescriptionDetails" rows="4" required></textarea>
-
-                <label for="dosage">Dosage:</label>
-                <input type="text" id="updateDosage" name="dosage" required>
-
-                <label for="description">Description:</label>
-                <textarea id="updateDescription" name="description" rows="4" required></textarea>
-
-                <label for="prescriptionDate">Prescription Date:</label>
-                <input type="date" id="updatePrescriptionDate" name="prescriptionDate" required>
-
-                <button type="submit" id="updateFormSubmitBtn">Update</button>
-            </form>
-        </div>
-
-        <!-- Delete Confirmation Message -->
-        <div class="delete-message" id="deleteMessage" style="display: none;">
-            Successfully Deleted!
-        </div>
+    <!-- Update Prescription Form -->
+    <div class="modal-content" id="updateForm" style="display: none;">
+        <span class="close-btn" onclick="closeForm()">×</span>
+        <h2>Update Prescription</h2>
+        <form id="updatePrescriptionForm">
+            <label for="prescriptionId">Prescription ID:</label>
+            <input type="text" id="updatPrescriptionId" name="prescriptionId" required>
+    
+            <label for="patientId">Patient ID:</label>
+            <input type="text" id="updatePatientId" name="patientId">
+    
+            <label for="medication">Medication:</label>
+            <textarea id="updateMedication" name="medication" rows="2"></textarea>
+    
+            <label for="dosage">Dosage:</label>
+            <textarea id="updateDosage" name="dosage" rows="2"></textarea>
+    
+            <label for="description">Description:</label>
+            <textarea id="updateDescription" name="description" rows="4"></textarea>
+    
+            <label for="prescriptionDate">Prescription Date:</label>
+            <input type="date" id="updatePrescriptionDate" name="prescriptionDate">
+    
+            <button type="button" id="updateFormSubmitBtn">Update</button>
+        </form>
     </div>
+    
+
 
     <script src="/js/prescription.js"></script>
 </body>

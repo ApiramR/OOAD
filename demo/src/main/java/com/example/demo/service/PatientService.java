@@ -47,13 +47,13 @@ public class PatientService {
         return rep.save(patient);
     }
 
-    public Patient getPatientByID(int patientID){
+    public Patient getPatientByID(Long patientID){
         return rep.findById(patientID).orElse(new Patient());
     } 
     public Patient getPatientByUsername(String username){
         return rep.findByUsername(username);
     }
-    public void deletePatient(int patientID){
+    public void deletePatient(Long patientID){
         rep.deleteById(patientID);
     }
     @Autowired

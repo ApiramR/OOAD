@@ -92,6 +92,16 @@ public class medicineController {
         }
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countMedicineItems() {
+        try {
+            long itemCount = medicineService.countAllMedicine();
+            return ResponseEntity.ok(itemCount);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(0L);
+        }
+    }
+
 
 
 

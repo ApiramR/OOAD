@@ -33,9 +33,7 @@
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white " style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img th:src="${pharmacy.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
-    </div>
+
     <div class="w3-col w3-bar">
       <span>
   <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
@@ -71,16 +69,16 @@
     <div class="w3-quarter">
       <div class="w3-container w3-red w3-padding-16">
         <div class="w3-left">
-          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+          <p id="prescriptionCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
-        <h4>Prescriptions</h4>
+        <h4>Total Prescriptions</h4>
       </div>
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-blue w3-padding-16">
         <div class="w3-left">
-          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+          <p id="orderCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
         <h4>Orders Completed</h4>
@@ -92,16 +90,16 @@
           <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
-        <h4>Shares</h4>
+        <h4>Items In The Inventory </h4>
       </div>
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-orange w3-text-white w3-padding-16">
         <div class="w3-left">
-          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+          <p id="medicineCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
-        <h4>Total Inventory Items</h4>
+        <h4>Varieties of Medicine Available</h4>
       </div>
     </div>
   </div>
@@ -169,6 +167,8 @@
 
   $(document).ready(function () {
     fetchInventoryCount();
+    fetchMedicineCount();
+    fetchPrescriptionCount()
   });
   // Get the Sidebar
   var mySidebar = document.getElementById("mySidebar");
@@ -202,6 +202,32 @@
       },
       error: function () {
         alert("Error fetching inventory count");
+      }
+    });
+  }
+
+  function fetchMedicineCount() {
+    $.ajax({
+      url: '/api/medicine/count',
+      type: 'GET',
+      success: function (count) {
+        $("#medicineCount").text(count);
+      },
+      error: function () {
+        alert("Error fetching total medicine count");
+      }
+    });
+  }
+
+  function fetchPrescriptionCount() {
+    $.ajax({
+      url: '/api/prescriptions/count',
+      type: 'GET',
+      success: function (count) {
+        $("#prescriptionCount").text(count);
+      },
+      error: function () {
+        alert("Error fetching total prescription count");
       }
     });
   }

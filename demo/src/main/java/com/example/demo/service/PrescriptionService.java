@@ -18,6 +18,8 @@ public class PrescriptionService{
 
     @Autowired
     PrescriptionRepo rep;
+    @Autowired
+    private PrescriptionRepo prescriptionRepo;
 
     public Prescription addPrescription(Prescription prescription){
         return rep.save(prescription);
@@ -44,6 +46,10 @@ public class PrescriptionService{
             columnNames.add(attribute.getName());
         }
         return columnNames.toArray(new String[0]);
+    }
+
+    public long countAllPrescriptions() {
+        return prescriptionRepo.count();
     }
     
 }

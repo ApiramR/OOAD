@@ -44,43 +44,10 @@ public class PharmacyService {
         rep.save(pharmacy);
         return "success";
     }
-/*
-    public void updatePharmacy(Map<String, String> formData, Pharmacy pharmacy){
-        rep.save(pharmacy);
-    }*/
 
-    public Boolean updatePharmacy(Map<String,String>formData, Pharmacy pharmacy){
-        try{
-            for (Map.Entry<String, String> column : formData.entrySet()) {
-                String fieldName = column.getKey();
-                Object fieldValue = column.getValue();
-                if (fieldName.equals("profilepicture")){
-                    continue;
-                }
-                if (fieldValue == null)continue;
-                if (fieldValue.equals(""))continue;
-                System.out.println(fieldName + " " + (String)fieldValue);
-                String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
-                String res = (String)fieldValue;
-                if (fieldName.equals("Password")){
-                    System.out.println(res);
-                    res = passwordEncoder.encode(res);
-                    System.out.println(res);
-                }
-                else if (fieldName.equals("height") || fieldName.equals("weight")){
-                    Method setter = Pharmacy.class.getMethod(methodName, Double.class);
-                    setter.invoke(pharmacy,Double.parseDouble(res));
-                    continue;
-                }
-                Method setter = Pharmacy.class.getMethod(methodName, String.class);
-                setter.invoke(pharmacy,res);
-            }
-        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+
+
+
 
     public Pharmacy getPharmacyByID(Long pharmacyID){
         return rep.findById(pharmacyID).orElse(new Pharmacy());
@@ -113,34 +80,42 @@ public class PharmacyService {
         }
         return columnNames.toArray(new String[0]);
     }
-    public String SavePharmacyprofilepicture(MultipartFile file, Pharmacy pharmacy){
-        String currentReportpath = imageuploaddir + pharmacy.getProfilepicture();
-        File currentpicture = new File(currentReportpath);
-        if (currentpicture.exists()){
-            System.out.println("Why its not deletingggg");
-            currentpicture.delete();
-        }
-        long l = System.currentTimeMillis();
-        String s = l + "";
-        String filename = 'a' + s + '_' + file.getOriginalFilename();
-        System.out.println(file.getOriginalFilename());
-        File directory = new File(imageuploaddir);
-        if (!directory.exists()){
-            directory.mkdirs();
-        }
-        try{
-            File destinationFile = new File(directory,filename);
-            pharmacy.setProfilepicture(filename);
-            file.transferTo(destinationFile);
-            return "/images/" + filename;
-        }catch(IOException e){
-            e.printStackTrace();
-            return "/images/defaultpp.jpg";
-        }
-    }
+
 
     public Pharmacy findById(Long id) {
         return pharmacyRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
     }
-}
+
+
+    public Boolean updatePharmacy(Map<String, String> formData, Pharmacy pharmacy) {
+            try {
+                for (Map.Entry<String, String> entry : formData.entrySet()) {
+                    String fieldName = entry.getKey();
+                    String fieldValue = entry.getValue();
+
+                    if (fieldValue == null || fieldValue.isEmpty()) {
+                        continue;
+                    }
+
+                    // Handle password encoding
+                    if ("Password".equalsIgnoreCase(fieldName)) {
+                        fieldValue = passwordEncoder.encode(fieldValue);
+                    }
+
+                    // Handle dynamic field updates using reflection
+                    String methodName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                    Method setter = Pharmacy.class.getMethod(methodName, String.class);
+                    setter.invoke(pharmacy, fieldValue);
+                }
+                // Save the updated pharmacy
+                pharmacyRepo.save(pharmacy);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+

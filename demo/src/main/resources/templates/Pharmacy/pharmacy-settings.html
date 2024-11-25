@@ -33,9 +33,7 @@
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white " style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img th:src="${pharmacy.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
-    </div>
+
     <div class="w3-col w3-bar">
       <span>
   <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
@@ -113,26 +111,20 @@
 
 
   <div class="w3-container">
-    <h5>Settings</h5>
+    <h5>Profile Settings</h5>
     <form id = "pharmacySettingsForm" th:action = "@{/pharmacy/settings(username=${pharmacy.username})}" method = "POST" enctype="multipart/form-data">
       <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+
         <tr>
-          <td>Change Profile Picture</td>
-          <td><input id="profilePictureInput" class="w3-input w3-border w3-round" type="file" name="profilepicture" accept="image/*">
-            <img id="profilePicturePreview" class="w3-margin-top" style="width:80px;height:80px;border-radius:50%;display:none;">
-          </td>
-        </tr>
-        <tr>
-          <td>Change Name</td>
+          <td>Change Company Name</td>
           <td>
-            <input id = "Fname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
-            <input id = "Mname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
-            <input id = "Lname" class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">
+            <input id = "Fname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
+            <input id = "Lname" class="w3-input w3-border w3-round" type="text" placeholder="ex: Pharmacy" pattern = "^[a-zA-Z]+.$" name = "Lname">
           </td>
         </tr>
         <tr>
           <td>Change Contact Number</td>
-          <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Phone Number" name = "pno"></td>
+          <td><input id = "pno" class="w3-input w3-border w3-round" type="text" placeholder="Enter new Phone Number" name = "pno"></td>
         </tr>
         <tr>
           <td>Change Password</td>
@@ -141,12 +133,12 @@
             <input class="w3-input w3-border w3-round w3-right" id = "cpasswrd" type="text" placeholder="Confirm Password"></td>
         </tr>
         <tr>
-          <td>Change Address</td>
-          <td><input class="w3-input w3-border w3-round w3-right" name = "address" type="text" placeholder="Enter new Address"></td>
+          <td>Change Company Address</td>
+          <td><input id = "address" class="w3-input w3-border w3-round w3-right" name = "address" type="text" placeholder="Enter new company Address"></td>
         </tr>
         <tr>
           <td>Change Opening Hours</td>
-          <td><input class="w3-input w3-border w3-round w3-right" name = "bloodtype" type="text" placeholder="ex: from Monday to Saturday from 9am to 8pm"></td>
+          <td><input id = "openhours" class="w3-input w3-border w3-round w3-right" name = "bloodtype" type="text" placeholder="ex: from Monday to Saturday from 9am to 8pm"></td>
         </tr>
 
       </table><br>
@@ -158,13 +150,12 @@
         <p id="spchar" class="invalid">A <b>special charecter</b></p>
         <p id="lengt" class="invalid">Minimum <b>8 characters</b></p>
       </div>
-      <button class="w3-button w3-dark-grey" id="saveSettings">Apply Changes </button>
+      <!--<button class="w3-button w3-dark-grey" id="saveSettings">Apply Changes </button>-->
+      <button class="w3-button w3-dark-grey" type="button" id="saveSettings">Apply Changes</button>
     </form>
     <div id="responseMessage"></div>
   </div>
   <hr>
-  <hr>
-
 
 
 
@@ -180,10 +171,6 @@
 
 
 <script>
-
-  $(document).ready(function () {
-    fetchInventoryCount();
-  });
   // Get the Sidebar
   var mySidebar = document.getElementById("mySidebar");
 
@@ -206,9 +193,6 @@
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
   }
-
-
-
   function pchek(v){
     var lowerCaseLetters = /[a-z]/g;
     if(v.match(/[a-z]/g)){
@@ -251,7 +235,6 @@
       lengt.classList.add("invalid");
     }
   }
-
   function pupd(v){
     if (v == 'blur'){
       document.getElementById("pcheck").style.display = "none";
@@ -269,57 +252,63 @@
       u.setCustomValidity('Passwords do not match');
     }
   }
+
   $(document).ready(function () {
-    // Preview the selected profile picture
-    $("#profilePictureInput").on("change", function () {
-      let fileInput = this;
-      if (fileInput.files.length > 0) {
-        let reader = new FileReader();
-        reader.onload = function (e) {
-          $("#profilePicturePreview").attr("src", e.target.result).show();
-        }
-        reader.readAsDataURL(fileInput.files[0]);
+
+    $(document).ready(function () {
+      // Automatically populate the form with pharmacy data
+      function populateForm(pharmacyData) {
+        $("#Fname").val(pharmacyData.Fname);
+        $("#Lname").val(pharmacyData.Lname);
+        $("#pno").val(pharmacyData.pno);
+        $("#address").val(pharmacyData.address);
+        $("#openhours").val(pharmacyData.openingHours);
       }
-    });
 
-    // Save settings with AJAX
-    $("#saveSettings").on("click", function (event) {
-      event.preventDefault(); // Prevent form submission
-      var formData = new FormData($("#pharmacySettingsForm")[0]);
+      // Extract pharmacy data from Thymeleaf variables
+      const pharmacyData = {
+        Fname: $("strong").attr("th:text").split(' ')[0], // Example to fetch Fname
+        Lname: $("strong").attr("th:text").split(' ')[1], // Example to fetch Lname
+        pno: $("#contactNumber").text(),
+        address: $("#addressData").text(),
+        openingHours: $("#openHoursData").text()
+      };
 
-      $.ajax({
-        url: `/pharmacy/${username}/settings`,
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-          $("#responseMessage").text("Updated Successfully");
+      populateForm(pharmacyData);
 
-          // Update profile picture in sidebar dynamically
-          let fileInput = $("#profilePictureInput")[0];
-          if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            console.log("File detected:", fileInput);
-            let reader = new FileReader();
-            reader.onload = function (e) {
-              $("#sidebarProfilePic").attr("src", e.target.result);
-            }
-            reader.readAsDataURL(fileInput.files[0]);
+      // Apply changes and update data using PUT
+      $("#saveSettings").on("click", function (event) {
+        event.preventDefault();
+
+        const updatedData = {
+          Fname: $("#Fname").val(),
+          Lname: $("#Lname").val(),
+          pno: $("#pno").val(),
+          address: $("#address").val(),
+          openingHours: $("#openhours").val()
+        };
+
+        $.ajax({
+          url: `/pharmacy/${pharmacyData.username}/settings`,
+          type: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(updatedData),
+          success: function (response) {
+            $("#responseMessage").text("Settings updated successfully!");
+          },
+          error: function (xhr) {
+            $("#responseMessage").text("Update failed: " + xhr.responseText);
           }
-          console.log("Fname",response.Fname);
-          console.log("Mname",response.Mname);
-          console.log("Lname",response.Lname);
-          let updatedName = response.Fname + " " +
-                  (response.Mname ? response.Mname + " " : "") +
-                  response.Lname;
-          $("#welcomecard strong").text(updatedName);
-        },
-        error: function (xhr, status, error) {
-          $("#responseMessage").text("Update failed: " + xhr.responseText);
-        }
+        });
       });
     });
+
+
   });
+
+
+
+
 </script>
 
 </body>

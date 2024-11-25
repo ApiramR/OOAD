@@ -120,10 +120,52 @@ public class pharmacyController {
         return "Pharmacy/pharmacy-settings";
     }
 
+    @PostMapping("pharmacy/{username}/settings")
+    public ResponseEntity<?> updatePharmacySettings(
+            @PathVariable String username,
+            @RequestParam Map<String, String> formData,
+            @RequestParam(required = false) MultipartFile profilepicture) {
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        if (pharmacy == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pharmacy not found");
+        }
+        // Update other settings
+        boolean updateStatus = pharmacyService.updatePharmacy(formData, pharmacy);
+        if (!updateStatus) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update settings");
+        }
+
+        // Save the updated pharmacy
+        pharmacyService.addPharmacy(pharmacy);
+        return ResponseEntity.ok(pharmacy);
+    }
+
+    @PutMapping("pharmacy/{username}/settings")
+    public ResponseEntity<?> updatePharmacySettings(
+            @PathVariable String username,
+            @RequestBody Map<String, String> updatedData) {
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        if (pharmacy == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pharmacy not found");
+        }
+        // Update fields from the request
+        pharmacy.setFname(updatedData.get("Fname"));
+        pharmacy.setLname(updatedData.get("Lname"));
+        pharmacy.setPno(updatedData.get("pno"));
+        pharmacy.setAddress(updatedData.get("address"));
+        pharmacy.setOpeningHours(updatedData.get("openingHours"));
+
+        // Save the updated pharmacy
+        pharmacyService.addPharmacy(pharmacy);
+        return ResponseEntity.ok("Settings updated successfully");
+    }
+
+
+
 
 
     @RequestMapping(value = "/pharmacy/debug", method = RequestMethod.GET)
-    public String debugPatientAccess() {
+    public String debugPharmacyAccess() {
         return "Debugging Pharmacy Access";
     }
     public void initialize(String username,Model model,Pharmacy pharmacy){

@@ -67,4 +67,8 @@ public class MedicineService {
         return medicineRepo.findByMedNameContainingIgnoreCaseOrMedTypeContainingIgnoreCaseOrManufacturerContainingIgnoreCase(query, query, query);
     }
 
+    public long countAllMedicine() {
+        return medicineRepo.count();
+    }
+
 }

@@ -53,4 +53,7 @@ public class securityconfig {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> response.sendRedirect("/login");
     }
+
+
+
 }

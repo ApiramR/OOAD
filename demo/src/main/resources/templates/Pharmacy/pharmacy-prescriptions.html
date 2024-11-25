@@ -33,10 +33,7 @@
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white " style="z-index:3;width:300px;" id="mySidebar"><br>
     <div class="w3-container w3-row">
-        <div class="w3-col s4">
-            <img th:src="${pharmacy.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
-        </div>
-        <div class="w3-col w3-bar">
+
       <span>
   <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
         </div>
@@ -71,37 +68,37 @@
         <div class="w3-quarter">
             <div class="w3-container w3-red w3-padding-16">
                 <div class="w3-left">
-                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                    <p id="prescriptionPrepareCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
                 <div class="w3-clear"></div>
-                <h4>Total Prescriptions</h4>
+                <h4>Prescriptions to Prepare</h4>
             </div>
         </div>
         <div class="w3-quarter">
             <div class="w3-container w3-blue w3-padding-16">
                 <div class="w3-left">
-                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                    <p id="prescriptionReadyCount" class="w3-xxxlarge w3-text-white">0</p>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>Prescriptions Ready</h4>
+            </div>
+        </div>
+        <div class="w3-quarter">
+            <div class="w3-container w3-teal w3-padding-16">
+                <div class="w3-left">
+                    <p id="orderCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
                 <div class="w3-clear"></div>
                 <h4>Orders Completed</h4>
             </div>
         </div>
         <div class="w3-quarter">
-            <div class="w3-container w3-teal w3-padding-16">
-                <div class="w3-left">
-                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
-                </div>
-                <div class="w3-clear"></div>
-                <h4>Shares</h4>
-            </div>
-        </div>
-        <div class="w3-quarter">
             <div class="w3-container w3-orange w3-text-white w3-padding-16">
                 <div class="w3-left">
-                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                    <p id="prescriptionCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
                 <div class="w3-clear"></div>
-                <h4>Total Inventory Items</h4>
+                <h4>Total Prescriptions</h4>
             </div>
         </div>
     </div>
@@ -123,7 +120,7 @@
         <!-- Footer -->
 
 
-    </div>
+
     <br>
     <footer class="w3-container w3-padding-16 w3-dark-grey">
         <h4>Group 14 Y2S1 CS BATCH</h4>
@@ -138,7 +135,11 @@
 <script>
 
     $(document).ready(function () {
-        fetchInventoryCount();
+        fetchPrescriptionCount();
+        fetchPrescriptionPrepareCount();
+        fetchPrescriptionReadyCountCount();
+        fetchOrderCount();
+
     });
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");
@@ -163,18 +164,62 @@
         overlayBg.style.display = "none";
     }
 
-    function fetchInventoryCount() {
+
+    function fetchPrescriptionCount() {
         $.ajax({
-            url: '/api/inventory/count',
+            url: '/api/prescriptions/count',
             type: 'GET',
             success: function (count) {
-                $("#inventoryCount").text(count);
+                $("#prescriptionCount").text(count);
             },
             error: function () {
-                alert("Error fetching inventory count");
+                alert("Error fetching total prescription count");
             }
         });
     }
+    function fetchPrescriptionPrepareCount() {
+        $.ajax({
+            url: '/api/prescriptions/prepare/count',
+            type: 'GET',
+            success: function (count) {
+                $("#prescriptionPrepareCount").text(count);
+            },
+            error: function () {
+                alert("Error fetching prescription prepare count");
+            }
+        });
+    }
+
+    function fetchPrescriptionReadyCountCount() {
+        $.ajax({
+            url: '/api/prescriptions/ready/count',
+            type: 'GET',
+            success: function (count) {
+                $("#prescriptionReadyCount").text(count);
+            },
+            error: function () {
+                alert("Error fetching prescription ready count");
+            }
+        });
+    }
+
+    function fetchOrderCount() {
+        $.ajax({
+            url: '/api/prescriptions/order/count',
+            type: 'GET',
+            success: function (count) {
+                $("#orderCount").text(count);
+            },
+            error: function () {
+                alert("Error fetching total orders count");
+            }
+        });
+    }
+
+
+
+
+
 </script>
 
 </body>

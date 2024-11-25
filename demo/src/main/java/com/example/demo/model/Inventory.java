@@ -8,12 +8,12 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "Inventory")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "Inventory")
 public class Inventory {
 
     @Id
@@ -29,16 +29,13 @@ public class Inventory {
     @Column(nullable = false)
     private int quantityInStock;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medID", nullable = false)
     private Medicine medicine;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "pharmacy_id", nullable = false)
-    private Pharmacy pharmacy; // Many Inventories belong to One Pharmacy
+    private Pharmacy pharmacy;
 
-
-    public Inventory(int inventoryID, Long medID, long price, LocalDate expiryDate, int quantityInStock) {
-    }
 }
+

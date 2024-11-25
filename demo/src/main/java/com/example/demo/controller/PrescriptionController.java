@@ -52,4 +52,14 @@ public class PrescriptionController {
         prescriptionService.deletePrescription(presid);
         return ResponseEntity.ok("deletion successful");
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countInventoryItems() {
+        try {
+            long itemCount = prescriptionService.countAllPrescriptions();
+            return ResponseEntity.ok(itemCount);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(0L);
+        }
+    }
 }

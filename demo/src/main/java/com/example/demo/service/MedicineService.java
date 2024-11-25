@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import com.example.demo.model.Medicine;
 import com.example.demo.repo.MedicineRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,11 @@ public class MedicineService {
         return medicineRepo.findAll();
     }
 
+    public Medicine findById(Long id) {
+        return medicineRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
+    }
+
 
 
     @Autowired
@@ -42,66 +46,27 @@ public class MedicineService {
         this.medicineRepo = medicineRepo;
     }
 
-    public List<Long> getMedIDsByMedName(String medName) {
-        return medicineRepo.findMedIDByMedName(medName);
+    public Medicine getMedicineByMedID(Long medID) {
+        return medicineRepo.findByMedID(medID);
     }
-}
 
-
-/*package com.example.demo.service;
-
-import java.util.List;
-import java.util.Optional;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.demo.repo.InventoryRepo;
-import com.example.demo.model.Inventory;
-
-import com.example.demo.repo.MedicineRepo;
-import com.example.demo.model.Medicine;
-
-
-
-@Service
-public class MedicineService {
-
-    @Autowired
-    private InventoryRepo inventoryRepo;
-    @Autowired
-    private MedicineRepo medicineRepo;
-
-
-    public Medicine addMedicine(Medicine medicine) {
+    // Save or update Medicine
+    public Medicine saveMedicine(Medicine medicine) {
         return medicineRepo.save(medicine);
     }
 
-    public Medicine findById(int id) {
-        Optional<Medicine> user = MedicineRepo.findById(id);
-
-        if(user.isEmpty()){
-            throw new RuntimeException("User not found");
-        }
-        return user.get();
-    }
-
-
-
-
-    @Autowired
-    public MedicineService(MedicineRepo medicineRepo) {
-        this.medicineRepo = medicineRepo;
-    }
-
     public List<Long> getMedIDsByMedName(String medName) {
         return medicineRepo.findMedIDByMedName(medName);
     }
 
 
 
+    public List<Medicine> searchMedicines(String query) {
+        return medicineRepo.findByMedNameContainingIgnoreCaseOrMedTypeContainingIgnoreCaseOrManufacturerContainingIgnoreCase(query, query, query);
+    }
 
-}*/
+    public long countAllMedicine() {
+        return medicineRepo.count();
+    }
 
-
+}

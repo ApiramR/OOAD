@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Doctor;
-import com.example.demo.model.Patient;
 import com.example.demo.service.DoctorService;
 import com.example.demo.service.PatientCommentsService;
 import com.example.demo.service.PatientService;

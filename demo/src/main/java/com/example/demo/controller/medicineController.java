@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/medicine")
@@ -14,6 +14,8 @@ public class medicineController {
 
     @Autowired
     private MedicineService MedicineService;
+    @Autowired
+    private MedicineService medicineService;
 
     // Add a new medicine
     @PostMapping("/add")
@@ -56,4 +58,51 @@ public class medicineController {
         Medicine medicine = MedicineService.findById(id.intValue());
         return ResponseEntity.ok(medicine);
     }
+
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Map<String, Object>>> searchMedicines(@RequestParam String query) {
+        try {
+            // Fetch medicines based on the search query
+            List<Medicine> medicines = medicineService.searchMedicines(query);
+
+            // Create a unique response mapped by medID
+            Map<Long, Map<String, Object>> uniqueMedicineMap = new HashMap<>();
+
+            for (Medicine item : medicines) {
+                if (!uniqueMedicineMap.containsKey(item.getMedID())) {
+                    Map<String, Object> medicineDetails = new HashMap<>();
+                    medicineDetails.put("medID", item.getMedID());
+                    medicineDetails.put("medicineName", item.getMedName());
+                    medicineDetails.put("medType", item.getMedType());
+                    medicineDetails.put("strength", item.getStrength());
+                    medicineDetails.put("manufacturer", item.getManufacturer());
+                    uniqueMedicineMap.put(item.getMedID(), medicineDetails);
+                }
+            }
+
+            // Convert the unique map values to a list
+            List<Map<String, Object>> response = new ArrayList<>(uniqueMedicineMap.values());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countMedicineItems() {
+        try {
+            long itemCount = medicineService.countAllMedicine();
+            return ResponseEntity.ok(itemCount);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(0L);
+        }
+    }
+
+
+
+
+
 }

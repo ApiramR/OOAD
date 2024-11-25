@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,11 @@ import jakarta.persistence.metamodel.EntityType;
 public class PharmacyService {
     @Autowired
     PharmacyRepo rep;
+    @Autowired
+    private PharmacyRepo pharmacyRepo;
+
+    @Value("${file.upload-dir2}")
+    private String imageuploaddir;
 
     public String addPharmacy(Pharmacy pharmacy){
         if (rep.findByUsernameAndTyp(pharmacy.getUsername(),pharmacy.getTyp()) != null){
@@ -32,10 +40,10 @@ public class PharmacyService {
         rep.save(pharmacy);
         return "success";
     }
-    
-    public void updatePharmacy(Pharmacy pharmacy){
-        rep.save(pharmacy);
-    }
+
+
+
+
 
     public Pharmacy getPharmacyByID(Long pharmacyID){
         return rep.findById(pharmacyID).orElse(new Pharmacy());
@@ -68,4 +76,42 @@ public class PharmacyService {
         }
         return columnNames.toArray(new String[0]);
     }
-}
+
+
+    public Pharmacy findById(Long id) {
+        return pharmacyRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
+    }
+
+
+    public Boolean updatePharmacy(Map<String, String> formData, Pharmacy pharmacy) {
+            try {
+                for (Map.Entry<String, String> entry : formData.entrySet()) {
+                    String fieldName = entry.getKey();
+                    String fieldValue = entry.getValue();
+
+                    if (fieldValue == null || fieldValue.isEmpty()) {
+                        continue;
+                    }
+
+                    // Handle password encoding
+                    if ("Password".equalsIgnoreCase(fieldName)) {
+                        fieldValue = passwordEncoder.encode(fieldValue);
+                    }
+
+                    // Handle dynamic field updates using reflection
+                    String methodName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                    Method setter = Pharmacy.class.getMethod(methodName, String.class);
+                    setter.invoke(pharmacy, fieldValue);
+                }
+                // Save the updated pharmacy
+                pharmacyRepo.save(pharmacy);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+

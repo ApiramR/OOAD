@@ -1,14 +1,6 @@
 package com.example.demo.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,12 +17,14 @@ import java.util.List;
 public class Pharmacy extends Userr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PharmacyID;
+    private Long pharmacyID;
 
     @Column
     private String openingHours;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventory> inventories; // One Pharmacy with Many Inventories
-    
+
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL)
+    private List<PharmacyPrescription> pharmacyPrescriptions;
 }

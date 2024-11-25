@@ -23,8 +23,6 @@
   </script>
 
 </head>
-<img th:src="${pharmacy.profilepic != null ? pharmacy.profilepic : '/images/default-profile.png'}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
-
 <body class="w3-light-grey">
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
@@ -67,29 +65,31 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5> Pharmacy Settings</b></h5>
+    <h3><b> Pharmacy Settings</b></h3>
   </header>
 
 
 
   <div class="w3-container">
     <h5>Settings</h5>
-    <form id = "patientSettingsForm" th:action = "@{/pharmacy/settings(username=${pharmacy.username})}" method = "POST" enctype="multipart/form-data">
+    <form id = "pharmacySettingsForm" th:action = "@{/pharmacy/settings(username=${pharmacy.username})}" method = "POST" enctype="multipart/form-data">
       <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
         <tr>
           <td>Change Profile Picture</td>
-          <td><input class="w3-input w3-border w3-round" type="file" name = "profilepicture"></td>
+          <td><input id="profilePictureInput" class="w3-input w3-border w3-round" type="file" name="profilepicture" accept="image/*">
+            <img id="profilePicturePreview" class="w3-margin-top" style="width:80px;height:80px;border-radius:50%;display:none;">
+          </td>
         </tr>
-        <tr>
-          <td>Change Username</td>
-          <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Username" pattern = "^[a-zA-Z]+.$" name = "username"></td>
-        </tr>
+        <!-- <tr>
+             <td>Change Username</td>
+             <td><input class="w3-input w3-border w3-round" type="text" placeholder="Enter new Username" pattern = "^[a-zA-Z]+.$" name = "username"></td>
+         </tr> -->
         <tr>
           <td>Change Name</td>
           <td>
-            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
-            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
-            <input class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">
+            <input id = "Fname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="First Name" pattern = "^[a-zA-Z]+.$" name = "Fname">
+            <input id = "Mname" class="w3-input w3-border w3-round w3-margin-bottom" type="text" placeholder="Middle Name" pattern = "^[a-zA-Z]+.$" name = "Mname">
+            <input id = "Lname" class="w3-input w3-border w3-round" type="text" placeholder="Last Name" pattern = "^[a-zA-Z]+.$" name = "Lname">
           </td>
         </tr>
         <tr>
@@ -134,19 +134,25 @@
   <hr>
   <hr>
 
+
+
+
   <br>
-
-
-  <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by <a href="#hehe" target="_blank">nipunmeegoda</a></p>
-  </footer>
-
-  <!-- End page content -->
+<footer class="w3-container w3-padding-16 w3-dark-grey">
+  <h4>Group 14 Y2S1 CS BATCH</h4>
+  <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
+</footer>
 </div>
 
+
+<!-- End page content -->
+
+
 <script>
+
+  $(document).ready(function () {
+    fetchInventoryCount();
+  });
   // Get the Sidebar
   var mySidebar = document.getElementById("mySidebar");
 
@@ -169,6 +175,9 @@
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
   }
+
+
+
   function pchek(v){
     var lowerCaseLetters = /[a-z]/g;
     if(v.match(/[a-z]/g)){
@@ -229,27 +238,49 @@
     }
   }
   $(document).ready(function () {
-    $("#saveSettings").on("click", function () {
+    // Preview the selected profile picture
+    $("#profilePictureInput").on("change", function () {
+      let fileInput = this;
+      if (fileInput.files.length > 0) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          $("#profilePicturePreview").attr("src", e.target.result).show();
+        }
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    });
+
+    // Save settings with AJAX
+    $("#saveSettings").on("click", function (event) {
+      event.preventDefault(); // Prevent form submission
       var formData = new FormData($("#pharmacySettingsForm")[0]);
 
       $.ajax({
-        url: '/pharmacy/settings', // Replace "johndoe" with the actual username
+        url: `/pharmacy/${username}/settings`,
         type: 'POST',
         data: formData,
         contentType: false,
         processData: false,
         success: function (response) {
-          $("#responseMessage").text(response); // Display success message
-          // Optionally update the profile picture preview dynamically
-          let fileInput = $("#profilepicture")[0];
-          if (fileInput.files.length > 0) {
+          $("#responseMessage").text("Updated Successfully");
+
+          // Update profile picture in sidebar dynamically
+          let fileInput = $("#profilePictureInput")[0];
+          if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            console.log("File detected:", fileInput);
             let reader = new FileReader();
             reader.onload = function (e) {
-              $("#profilePicturePreview").attr("src", e.target.result);
+              $("#sidebarProfilePic").attr("src", e.target.result);
             }
             reader.readAsDataURL(fileInput.files[0]);
-            window.location.href = "/pharmacy/settings";
           }
+          console.log("Fname",response.Fname);
+          console.log("Mname",response.Mname);
+          console.log("Lname",response.Lname);
+          let updatedName = response.Fname + " " +
+                  (response.Mname ? response.Mname + " " : "") +
+                  response.Lname;
+          $("#welcomecard strong").text(updatedName);
         },
         error: function (xhr, status, error) {
           $("#responseMessage").text("Update failed: " + xhr.responseText);

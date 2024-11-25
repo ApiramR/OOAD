@@ -65,57 +65,82 @@
 
     <!-- Header -->
     <header class="w3-container" style="padding-top:22px">
-        <h5><b>Prescription Manager</b></h5>
+        <h3><b> Patient Prescriptions</b></h3>
     </header>
 
-    <div class="container mt-4">
-        <div class="dashboard-header">
-            <h2>Welcome, Pharmacist</h2>
-            <p>Manage prescriptions and ensure timely fulfillment for patients.</p>
-        </div>
-
-        <div class="mt-4">
-            <h4 class="mb-3">Patient Prescriptions</h4>
-            <div class="row" id="prescriptions-container">
-                <!-- Prescription Card Template -->
-                <div class="col-md-4" th:each="prescription : ${prescriptions}">
-                    <div class="card prescription-card">
-                        <div class="card-body">
-                            <h6><strong>Patient Name:</strong> <span th:text="${prescription.patientName}"></span></h6>
-                            <p><strong>Age:</strong> <span th:text="${prescription.age}"></span></p>
-                            <p><strong>Gender:</strong> <span th:text="${prescription.gender}"></span></p>
-                            <hr>
-                            <h6>Medications:</h6>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" th:each="medication : ${prescription.medications}">
-                                    <strong th:text="${medication.name}"></strong> - <span th:text="${medication.dosage}"></span>
-                                </li>
-                            </ul>
-                            <hr>
-                            <div class="action-buttons">
-                                <button class="btn btn-success btn-sm" onclick="markPrescription('ready')">Ready</button>
-                                <button class="btn btn-primary btn-sm" onclick="markPrescription('completed')">Completed</button>
-                                <button class="btn btn-danger btn-sm" onclick="markPrescription('cancel' )">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="w3-row-padding w3-margin-bottom">
+        <div class="w3-quarter">
+            <div class="w3-container w3-red w3-padding-16">
+                <div class="w3-left">
+                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
-                <!-- End of Prescription Card Template -->
+                <div class="w3-clear"></div>
+                <h4>Total Prescriptions</h4>
+            </div>
+        </div>
+        <div class="w3-quarter">
+            <div class="w3-container w3-blue w3-padding-16">
+                <div class="w3-left">
+                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>Orders Completed</h4>
+            </div>
+        </div>
+        <div class="w3-quarter">
+            <div class="w3-container w3-teal w3-padding-16">
+                <div class="w3-left">
+                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>Shares</h4>
+            </div>
+        </div>
+        <div class="w3-quarter">
+            <div class="w3-container w3-orange w3-text-white w3-padding-16">
+                <div class="w3-left">
+                    <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>Total Inventory Items</h4>
             </div>
         </div>
     </div>
 
+    <hr>
 
-    <!-- Footer -->
-    <footer class="w3-container w3-padding-16 w3-light-grey">
-        <h4>FOOTER</h4>
-        <p>Powered by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Footer -->
+
+
+    </div>
+    <br>
+    <footer class="w3-container w3-padding-16 w3-dark-grey">
+        <h4>Group 14 Y2S1 CS BATCH</h4>
+        <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
     </footer>
-
-    <!-- End page content -->
 </div>
 
+
+<!-- End page content -->
+
+
 <script>
+
+    $(document).ready(function () {
+        fetchInventoryCount();
+    });
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");
 
@@ -137,6 +162,19 @@
     function w3_close() {
         mySidebar.style.display = "none";
         overlayBg.style.display = "none";
+    }
+
+    function fetchInventoryCount() {
+        $.ajax({
+            url: '/api/inventory/count',
+            type: 'GET',
+            success: function (count) {
+                $("#inventoryCount").text(count);
+            },
+            error: function () {
+                alert("Error fetching inventory count");
+            }
+        });
     }
 </script>
 

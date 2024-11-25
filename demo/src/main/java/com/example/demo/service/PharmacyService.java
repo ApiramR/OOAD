@@ -44,12 +44,12 @@ public class PharmacyService {
         rep.save(pharmacy);
         return "success";
     }
-
+/*
     public void updatePharmacy(Map<String, String> formData, Pharmacy pharmacy){
         rep.save(pharmacy);
-    }
+    }*/
 
-    public Boolean updatePharmacy1(Map<String,String>formData, Pharmacy pharmacy){
+    public Boolean updatePharmacy(Map<String,String>formData, Pharmacy pharmacy){
         try{
             for (Map.Entry<String, String> column : formData.entrySet()) {
                 String fieldName = column.getKey();
@@ -113,7 +113,7 @@ public class PharmacyService {
         }
         return columnNames.toArray(new String[0]);
     }
-    public String Saveprofilepicture(MultipartFile file, Pharmacy pharmacy){
+    public String SavePharmacyprofilepicture(MultipartFile file, Pharmacy pharmacy){
         String currentReportpath = imageuploaddir + pharmacy.getProfilepicture();
         File currentpicture = new File(currentReportpath);
         if (currentpicture.exists()){

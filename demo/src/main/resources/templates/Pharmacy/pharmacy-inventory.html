@@ -52,7 +52,6 @@
     <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
     <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>Inventory   </a>
     <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Prescriptions</a>
-    <a th:href="@{/pharmacy/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Settings</a>
   </div>
 </nav>
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -80,7 +79,7 @@
         <tr>
           <td>Medicine ID</td>
           <td>
-            <input class="w3-input w3-border w3-round" type="text" id="medID" name="medID" placeholder="Enter Medicine ID" required>
+            <input class="w3-input w3-border w3-round" type="number" id="medID" name="medID" placeholder="Enter Medicine ID" required>
           </td>
         </tr>
         <tr>
@@ -103,9 +102,15 @@
         </tr>
       </table>
       <br>
+
       <button class="w3-button w3-dark-grey" type="button" id="addBtn">Add</button>
       <button class="w3-button w3-blue-grey" type="button" id="updateBtn">Update</button>
       <button class="w3-button w3-red" type="button" id="deleteBtn">Delete</button>
+      <hr>
+      <input class="w3-input w3-border" type="text" id="search" placeholder="Search Inventory...">
+
+
+
     </form>
     <div id="responseMessage"></div>
     <hr>
@@ -131,6 +136,33 @@
       </table>
     </div>
   </div>
+<hr>
+  <div class="w3-container">
+    <h5>Search Medicines</h5>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <input class="w3-input w3-border" type="text" id="medicineSearch" placeholder="Search Medicines..." style="flex: 1;">
+      <button class="w3-button w3-blue" id="medicineSearchBtn">Search</button>
+    </div>
+  </div>
+  <div class="w3-container">
+    <h5>Medicine List</h5>
+    <table id="medicineTable" class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+      <thead>
+      <tr>
+        <th>Medicine ID</th>
+        <th>Medicine Name</th>
+        <th>Medicine Type</th>
+        <th>Strength</th>
+        <th>Manufacturer</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Medicines will be dynamically populated here -->
+      </tbody>
+    </table>
+  </div>
+
+
 
   <br>
   <div class="w3-container w3-dark-grey w3-padding-32">
@@ -168,106 +200,98 @@
 
 <script>
   $(document).ready(function () {
+    // Fetch and populate inventory
     fetchInventory();
 
+// Add inventory
     $("#addBtn").on("click", function () {
-      const data = {
-        medicine: {
-          medID: $("#medID").val()
-        },
-        price: $("#price").val(),
-        expiryDate: $("#expiryDate").val(),
-        quantityInStock: $("#quantityInStock").val(),
-        pharmacyID: $("#pharmacyID").val() // Include pharmacyID
-      };
+      const medID = Number($("#medID").val());
+      const price = $("#price").val();
+      const expiryDate = $("#expiryDate").val();
+      const quantityInStock = $("#quantityInStock").val();
 
+      if (!medID || !price || !expiryDate || !quantityInStock) {
+        alert("All fields are required.");
+        return;
+      }
+
+      const inventoryData = {
+        medID: Number($("#medID").val()), // Ensure this is a number
+        price: Number($("#price").val()),
+        expiryDate: $("#expiryDate").val(),
+        quantityInStock: Number($("#quantityInStock").val()),
+        <!--pharmacyUsername: $("#pharmacyUsername").val()-->
+        pharmacyUsername: "Pharmacy"// Include pharmacy username
+      };
 
       $.ajax({
         url: '/api/inventory/add',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(data),
+        data: JSON.stringify(inventoryData),
         success: function () {
-          $("#responseMessage").text("Inventory added successfully!");
-          resetForm();
+          alert("Inventory added successfully!");
           fetchInventory();
         },
         error: function (xhr) {
-          const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
-          $("#responseMessage").text("Error: " + errorMessage);
+          alert("Error: " + xhr.responseText);
         }
       });
+
     });
 
+
     $("#updateBtn").on("click", function () {
-      const data = {
-        medicine: {
-          medID: $("#medID").val()
-        },
-        price: $("#price").val(),
-        expiryDate: $("#expiryDate").val(),
-        quantityInStock: $("#quantityInStock").val(),
-        pharmacyID: $("#pharmacyID").val() // Include pharmacyID
+      const inventoryID = $("#inventoryID").val();
+      const medID = Number($("#medID").val());
+      const price = Number($("#price").val());
+      const expiryDate = $("#expiryDate").val();
+      const quantityInStock = Number($("#quantityInStock").val());
+
+      if (!inventoryID || !medID || !price || !expiryDate || !quantityInStock) {
+        alert("All fields are required.");
+        return;
+      }
+
+      const inventoryData = {
+        medID: medID,
+        price: price,
+        expiryDate: expiryDate,
+        quantityInStock: quantityInStock
       };
 
       $.ajax({
-        url: `/api/inventory/update/${id}`,
+        url: `/api/inventory/update/${inventoryID}`,
         type: 'PUT',
         contentType: 'application/json',
-        data: JSON.stringify(data),
+        data: JSON.stringify(inventoryData),
         success: function () {
-          $("#responseMessage").text("Inventory updated successfully!");
-          resetForm();
-          fetchInventory();
+          alert("Inventory updated successfully!");
+          fetchInventory(); // Refresh the inventory list
         },
         error: function (xhr) {
-          const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
-          $("#responseMessage").text("Error: " + errorMessage);
+          alert("Error: " + xhr.responseText);
         }
       });
     });
 
-    $("#deleteBtn").on("click", function () {
-      const id = $("#inventoryID").val();
-      if (!id) {
-        alert("Select an item to delete.");
-        return;
-      }
-      if (confirm("Are you sure you want to delete this item?")) {
-        $.ajax({
-          url: `/api/inventory/delete/${id}`,
-          type: 'DELETE',
-          success: function () {
-            $("#responseMessage").text("Inventory deleted successfully!");
-            resetForm();
-            fetchInventory();
-          },
-          error: function (xhr) {
-            const errorMessage = xhr.responseJSON?.message || "An unexpected error occurred.";
-            $("#responseMessage").text("Error: " + errorMessage);
-          }
-        });
-      }
-    });
 
-    $("#inventoryTable").on("click", ".editBtn", function () {
-      const row = $(this).closest("tr");
-      $("#inventoryID").val(row.find(".id").text());
-      $("#medID").val(row.find(".medID").text());
-      $("#price").val(row.find(".price").text());
-      $("#expiryDate").val(row.find(".expiryDate").text());
-      $("#quantityInStock").val(row.find(".quantity").text());
-    });
+    //Search Inventory
+    $("#search").on("input", function () {
+      const query = $(this).val();
 
-    function fetchInventory() {
-      $.get('/api/inventory/all', function (response) {
-        const tableBody = $("#inventoryTable tbody");
-        tableBody.empty();
-        if (response.length === 0) {
-          tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
-        } else {
-          response.forEach(item => {
-            tableBody.append(`
+      $.ajax({
+        url: `/api/inventory/search?query=${query}`,
+        type: 'GET',
+        success: function (response) {
+          const tableBody = $("#inventoryTable tbody");
+          tableBody.empty();
+
+          if (response.length === 0) {
+            tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
+          } else {
+            response.forEach(item => {
+              tableBody.append(`
                         <tr>
                             <td class="id">${item.inventoryID}</td>
                             <td class="medID">${item.medID}</td>
@@ -279,17 +303,114 @@
                             <td><button class="w3-button w3-blue editBtn">Edit</button></td>
                         </tr>
                     `);
+            });
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + xhr.responseText);
+        }
+      });
+    });
+
+  //search Medicines
+    $("#medicineSearchBtn").on("click", function () {
+      const query = $("#medicineSearch").val();
+
+      if (query.trim() === "") {
+        alert("Please enter a search term.");
+        return;
+      }
+
+      $.ajax({
+        url: `/api/medicine/search?query=${query}`,
+        type: 'GET',
+        success: function (response) {
+          const tableBody = $("#medicineTable tbody");
+          tableBody.empty();
+
+          if (response.length === 0) {
+            tableBody.append('<tr><td colspan="5" class="text-center">No medicines found</td></tr>');
+          } else {
+            response.forEach(medicine => {
+              tableBody.append(`
+                        <tr>
+                            <td>${medicine.medID}</td>
+                            <td>${medicine.medicineName}</td>
+                            <td>${medicine.medType}</td>
+                            <td>${medicine.strength}</td>
+                            <td>${medicine.manufacturer}</td>
+                        </tr>
+                    `);
+            });
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + xhr.responseText);
+        }
+      });
+    });
+
+
+
+
+    // Delete inventory
+    $("#deleteBtn").on("click", function () {
+      const id = $("#inventoryID").val();
+      if (!id) {
+        alert("Select an item to delete.");
+        return;
+      }
+      $.ajax({
+        url: `/api/inventory/delete/${id}`,
+        type: 'DELETE',
+        success: function () {
+          $("#responseMessage").text("Inventory deleted successfully!");
+          fetchInventory();
+        },
+        error: function (xhr) {
+          $("#responseMessage").text("Error: " + xhr.responseText);
+        }
+      });
+    });
+
+    // Populate form when editing
+    $("#inventoryTable").on("click", ".editBtn", function () {
+      const row = $(this).closest("tr");
+      $("#inventoryID").val(row.find(".id").text());
+      $("#medID").val(row.find(".medID").text());
+      $("#price").val(row.find(".price").text());
+      $("#expiryDate").val(row.find(".expiryDate").text());
+      $("#quantityInStock").val(row.find(".quantity").text());
+    });
+
+    // Fetch inventory
+    function fetchInventory() {
+      $.get('/api/inventory/all', function (response) {
+        const tableBody = $("#inventoryTable tbody");
+        tableBody.empty();
+        if (response.length === 0) {
+          tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
+        } else {
+          response.forEach(item => {
+            tableBody.append(`
+                    <tr>
+                        <td class="id">${item.inventoryID}</td>
+                        <td class="medID">${item.medID}</td>
+                        <td class="medicineName">${item.medicineName}</td>
+                        <td class="strength">${item.strength}</td>
+                        <td class="price">${item.price}</td>
+                        <td class="expiryDate">${item.expiryDate}</td>
+                        <td class="quantity">${item.quantityInStock}</td>
+                        <td><button class="w3-button w3-blue editBtn">Edit</button></td>
+                    </tr>
+                `);
           });
         }
       });
     }
 
-    function resetForm() {
-      $("#inventoryForm")[0].reset();
-      $("#inventoryID").val("");
-    }
-  });
 
+  });
 </script>
 
 </body>

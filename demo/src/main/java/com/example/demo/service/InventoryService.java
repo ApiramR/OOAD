@@ -38,6 +38,7 @@ public class InventoryService {
         return inventoryRepo.save(inventory); // Save Inventory with valid Medicine
     }
 
+
     public Inventory updateInventory(Inventory inventory) {
         return inventoryRepo.save(inventory);
     }
@@ -53,4 +54,9 @@ public class InventoryService {
     public List<Inventory> getAllInventory() {
         return inventoryRepo.findAll();
     }
+
+    public List<Inventory> searchInventory(String query) {
+        return inventoryRepo.findByMedicineNameContainingIgnoreCaseOrStrengthContainingIgnoreCase(query, query);
+    }
+
 }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang = "en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - Prescriptions</title>
+    <link rel="stylesheet" href="/css/prescription.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Doctor Dashboard</h1>
+        </header>
+
+        <div class="search-bar">
+            <div class="search-icon">
+                <i class="fa fa-search"></i> <!-- The search icon -->
+            </div>
+            <input type="text" id="searchInput" placeholder="Search by Patient ID..." required />
+            <button id="searchButton" onclick="searchPrescription()">Search</button>
+        </div>
+        
+        <section class="prescription-panel">
+            <!-- Prescription Card will be dynamically populated here -->
+        </section>
+
+        <!-- Create Prescription Button -->
+        <div class="create-prescription">
+            <button id="createPrescriptionBtn" onclick="openForm('create')">Create Prescription</button>
+        </div>
+
+        <!-- Create Prescription Form -->
+        <div class="modal-content" id="createForm" style="display: none;">
+            <span class="close-btn" onclick="closeForm()">×</span>
+            <h2>Create Prescription</h2>
+            <form id="createPrescriptionForm">
+                <label for="patientName">Patient ID:</label>
+                <input type="text" id="createPatientName" name="patientName" required>
+
+                <label for="prescriptionDetails">Prescription:</label>
+                <textarea id="createPrescriptionDetails" name="prescriptionDetails" rows="4" required></textarea>
+
+                <label for="dosage">Dosage:</label>
+                <input type="text" id="createDosage" name="dosage" required>
+
+                <label for="description">Description:</label>
+                <textarea id="createDescription" name="description" rows="4" required></textarea>
+
+                <label for="prescriptionDate">Prescription Date:</label>
+                <input type="date" id="createPrescriptionDate" name="prescriptionDate" required>
+
+                <button type="submit" id="createFormSubmitBtn">Create</button>
+            </form>
+        </div>
+
+        <!-- Update Prescription Form -->
+        <div class="modal-content" id="updateForm" style="display: none;">
+            <span class="close-btn" onclick="closeForm()">×</span>
+            <h2>Update Prescription</h2>
+            <form id="updatePrescriptionForm">
+                <input type="hidden" id="updatePrescriptionId" name="prescriptionId">
+                <label for="patientName">Patient Name:</label>
+                <input type="text" id="updatePatientName" name="patientName" required>
+
+                <label for="prescriptionDetails">Prescription Details:</label>
+                <textarea id="updatePrescriptionDetails" name="prescriptionDetails" rows="4" required></textarea>
+
+                <label for="dosage">Dosage:</label>
+                <input type="text" id="updateDosage" name="dosage" required>
+
+                <label for="description">Description:</label>
+                <textarea id="updateDescription" name="description" rows="4" required></textarea>
+
+                <label for="prescriptionDate">Prescription Date:</label>
+                <input type="date" id="updatePrescriptionDate" name="prescriptionDate" required>
+
+                <button type="submit" id="updateFormSubmitBtn">Update</button>
+            </form>
+        </div>
+
+        <!-- Delete Confirmation Message -->
+        <div class="delete-message" id="deleteMessage" style="display: none;">
+            Successfully Deleted!
+        </div>
+    </div>
+
+    <script src="/js/prescription.js"></script>
+</body>
+</html>

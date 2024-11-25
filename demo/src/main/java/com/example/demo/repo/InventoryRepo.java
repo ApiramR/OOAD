@@ -26,4 +26,9 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 public interface InventoryRepo extends JpaRepository<Inventory, Long> {
     @Query("SELECT i FROM Inventory i WHERE i.pharmacy.id = :pharmacyId")
     List<Inventory> findByPharmacyId(@Param("pharmacyId") Long pharmacyId);
+
+
+    @Query("SELECT i FROM Inventory i WHERE i.medicine.medName LIKE %:query% OR i.medicine.strength LIKE %:query%")
+    List<Inventory> findByMedicineNameContainingIgnoreCaseOrStrengthContainingIgnoreCase(@Param("query") String query1, @Param("query") String query2);
+
 }

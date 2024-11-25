@@ -82,7 +82,5 @@ public class Medicine {
         return strength;
     }
 
-    public void setStrength(String strength) {
-        this.strength = strength;
-    }
+
 }

@@ -59,4 +59,9 @@ public class InventoryService {
         return inventoryRepo.findByMedicineNameContainingIgnoreCaseOrStrengthContainingIgnoreCase(query, query);
     }
 
+    public long countAllInventory() {
+        return inventoryRepo.count();
+    }
+
+
 }

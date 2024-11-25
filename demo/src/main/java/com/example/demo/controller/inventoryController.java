@@ -158,7 +158,15 @@ public class inventoryController {
         }
     }
 
-
+    @GetMapping("/count")
+    public ResponseEntity<Long> countInventoryItems() {
+        try {
+            long itemCount = inventoryService.countAllInventory();
+            return ResponseEntity.ok(itemCount);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(0L);
+        }
+    }
 
 
 

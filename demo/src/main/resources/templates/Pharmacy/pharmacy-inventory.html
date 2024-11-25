@@ -32,26 +32,29 @@
   <span class="w3-bar-item w3-right"><a href = "/logout">Logout</a></span>
 </div>
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white " style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
       <img th:src="${pharmacy.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
     </div>
     <div class="w3-col w3-bar">
-      <span>Welcome, <strong th:text = "${pharmacy.Fname} + ' ' + ${pharmacy.Lname}"></strong></span><br>
-
+      <span>
+  <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
     </div>
   </div>
   <hr>
   <div class="w3-container">
-    <h5>Dashboard</h5>
+    <h5><b>Pharmacy Dashboard</b></h5>
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i></i>  Overview</a>
-    <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
-    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>Inventory   </a>
-    <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Prescriptions</a>
+
+    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">  Overview  </a>
+    <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Profile   </a>
+    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue">Inventory & Medicine  </a>
+    <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding">Prescriptions </a>
+    <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Settings  </a>
+
   </div>
 </nav>
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -64,10 +67,8 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> Inventory Manager</b></h5>
+    <h5><b>Inventory Manager</b></h5>
   </header>
-
-  <input type="hidden" id="pharmacyID" name="pharmacyID" value="${pharmacy.id}">
 
 
   <hr>
@@ -163,41 +164,12 @@
   </div>
 
 
-
-  <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
-    <div class="w3-row">
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-        <p>Language</p>
-        <p>Country</p>
-        <p>City</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-red">System</h5>
-        <p>Browser</p>
-        <p>OS</p>
-        <p>More</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-        <p>Users</p>
-        <p>Active</p>
-        <p>Geo</p>
-        <p>Interests</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by nipunmeegoda</p>
-  </footer>
-
-  <!-- End page content -->
+<br>
+<footer class="w3-container w3-padding-16 w3-dark-grey">
+  <h4>Group 14 Y2S1 CS BATCH</h4>
+  <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
+</footer>
 </div>
-
 <script>
   $(document).ready(function () {
     // Fetch and populate inventory

@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -126,8 +127,8 @@ public class pharmacyController {
         return "/Pharmacy/pharmacy-dashboard";
     }
 
-    @GetMapping(value="/pharmacy/settings")
-    public String patientSettings(Model model){
+    @GetMapping(value="/pharmacy/{username}/settings")
+    public String pharmacySettings(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null){
             return "redirect:/login?loginagain";
@@ -135,73 +136,32 @@ public class pharmacyController {
         String username = authentication.getName();
         Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
         initialize(username, model, pharmacy);
-        return "PatientSettings.html";
+        return "/Pharmacy/PharmacySettings";
     }
 
-
-    @PostMapping("/pharmacy/settings")
+    @PostMapping("/pharmacy/{username}/settings")
     @ResponseBody
-    public ResponseEntity<?> PharmacyChangeSettings(@RequestParam Map<String, String> formData, @RequestParam(value = "profilepicture", required = false) MultipartFile file){
+    public ResponseEntity<?> PatientChangeSettings(@RequestParam Map<String, String> formData,@RequestParam(value = "profilepicture", required = false) MultipartFile file){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
+        Map<String,String> response = new HashMap<String,String>();
         String username = authentication.getName();
         Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-        if (file != null){
-            String currentReportpath = imageuploaddir + pharmacy.getProfilepicture();
-            File currentpicture = new File(currentReportpath);
-            if (currentpicture.exists()){
-                System.out.println("Why its not deletingggg");
-                currentpicture.delete();
-            }
-            long l = System.currentTimeMillis();
-            String s = l + "";
-            String filename = 'a' + s + '_' + file.getOriginalFilename();
-            System.out.println(file.getOriginalFilename());
-            File directory = new File(imageuploaddir);
-            if (!directory.exists()){
-                directory.mkdirs();
-            }
-            try{
-                File destinationFile = new File(directory,filename);
-                pharmacy.setProfilepicture(filename);
-                file.transferTo(destinationFile);
-            }catch(IOException e){
-                e.printStackTrace();
-            }
+        if (file != null && !file.isEmpty()){
+            System.out.println("Yes iam changing profile picture");
+            pharmacyService.Saveprofilepicture(file,pharmacy);
         }
-        try{
-            for (Map.Entry<String, String> column : formData.entrySet()) {
-                String fieldName = column.getKey();
-                Object fieldValue = column.getValue();
-                if (fieldName.equals("profilepicture")){
-                    continue;
-                }
-                if (fieldValue == null)continue;
-                if (fieldValue.equals(""))continue;
-                System.out.println(fieldName + " " + (String)fieldValue);
-                String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
-                String res = (String)fieldValue;
-                if (fieldName.equals("Password")){
-                    System.out.println(res);
-                    res = passwordEncoder.encode(res);
-                    System.out.println(res);
-                }
-                else if (fieldName.equals("height") || fieldName.equals("weight")){
-                    Method setter = Pharmacy.class.getMethod(methodName, Double.class);
-                    setter.invoke(pharmacy,Double.parseDouble(res));
-                    continue;
-                }
-                Method setter = Pharmacy.class.getMethod(methodName, String.class);
-                setter.invoke(pharmacy,res);
-            }
-        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-            e.printStackTrace();
+        if (pharmacyService.updatePharmacy1(formData,pharmacy)){
+            response.put("Fname",pharmacy.getFname());
+            response.put("Mname",pharmacy.getMname());
+            response.put("Lname",pharmacy.getLname());
+            return ResponseEntity.ok(response);
+        }
+        else{
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
-        pharmacyService.updatePharmacy(pharmacy);
-        return ResponseEntity.ok("Update successful");
     }
 
 

@@ -31,28 +31,28 @@
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white " style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
       <img th:src="${pharmacy.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
     </div>
     <div class="w3-col w3-bar">
-      <span>Welcome, <strong th:text = "${pharmacy.Fname} + ' ' + ${pharmacy.Lname}"></strong></span><br>
-
+      <span>
+  <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
     </div>
   </div>
   <hr>
   <div class="w3-container">
-    <h5>Dashboard</h5>
+    <h5><b>Pharmacy Dashboard</b></h5>
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
 
-    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Overview</a>
-    <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
-    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Inventory   </a>
-    <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Prescriptions</a>
-    <a th:href="@{/pharmacy/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Settings</a>
+    <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue">  Overview  </a>
+    <a th:href="@{/pharmacy/{username}/profile(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Profile   </a>
+    <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Inventory & Medicine  </a>
+    <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding">Prescriptions </a>
+    <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Settings  </a>
 
   </div>
 </nav>
@@ -65,15 +65,14 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+    <h3><b> My Overview</b></h3>
   </header>
 
   <div class="w3-row-padding w3-margin-bottom">
     <div class="w3-quarter">
       <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>52</h3>
+        <div class="w3-left">
+          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
         <h4>Prescriptions</h4>
@@ -81,9 +80,8 @@
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-blue w3-padding-16">
-        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>99</h3>
+        <div class="w3-left">
+          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
         <h4>Orders Completed</h4>
@@ -91,9 +89,8 @@
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>23</h3>
+        <div class="w3-left">
+          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
         <h4>Shares</h4>
@@ -101,15 +98,16 @@
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-orange w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>50</h3>
+        <div class="w3-left">
+          <p id="inventoryCount" class="w3-xxxlarge w3-text-white">0</p>
         </div>
         <div class="w3-clear"></div>
-        <h4>Users</h4>
+        <h4>Total Inventory Items</h4>
       </div>
     </div>
   </div>
+
+
 
   <hr>
   <div class="w3-container">
@@ -152,42 +150,27 @@
         <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
       </div>
     </div>
+
+    <!-- Footer -->
+
+
   </div>
   <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
-    <div class="w3-row">
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-        <p>Language</p>
-        <p>Country</p>
-        <p>City</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-red">System</h5>
-        <p>Browser</p>
-        <p>OS</p>
-        <p>More</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-        <p>Users</p>
-        <p>Active</p>
-        <p>Geo</p>
-        <p>Interests</p>
-      </div>
-    </div>
+   <footer class="w3-container w3-padding-16 w3-dark-grey">
+    <h4>Group 14 Y2S1 CS BATCH</h4>
+    <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
+  </footer>
   </div>
 
-  <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda</a></p>
-  </footer>
 
   <!-- End page content -->
-</div>
+
 
 <script>
+
+  $(document).ready(function () {
+    fetchInventoryCount();
+  });
   // Get the Sidebar
   var mySidebar = document.getElementById("mySidebar");
 
@@ -209,6 +192,19 @@
   function w3_close() {
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
+  }
+
+  function fetchInventoryCount() {
+    $.ajax({
+      url: '/api/inventory/count',
+      type: 'GET',
+      success: function (count) {
+        $("#inventoryCount").text(count);
+      },
+      error: function () {
+        alert("Error fetching inventory count");
+      }
+    });
   }
 </script>
 

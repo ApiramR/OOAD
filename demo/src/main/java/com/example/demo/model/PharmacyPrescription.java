@@ -22,9 +22,9 @@ public class PharmacyPrescription {
     @JoinColumn(name = "prescription_id", nullable = false)
     private Prescription prescription;
 
-    @Column(name = "is_ready", nullable = false)
+    @Column(name = "is_ready")
     private Boolean isReady = false;
 
-    @Column(name = "is_completed", nullable = false)
+    @Column(name = "is_completed")
     private Boolean isCompleted = false;
 }

@@ -35,10 +35,6 @@ public class Medicine {
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventory> inventories;
 
-
-
-
-
     public List<Inventory> getInventories() {
         return inventories;
     }

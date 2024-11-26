@@ -48,6 +48,9 @@ public class MedicineService {
     public Medicine getMedBymedName(String meds){
         return medicineRepo.findBymedName(meds);
     }
+    public Medicine getMedicineByMedID(Long medID){
+        return medicineRepo.findById(medID).orElse(null);
+    }
 
     // Save or update Medicine
     public Medicine saveMedicine(Medicine medicine) {
@@ -56,6 +59,9 @@ public class MedicineService {
 
     public long countAllMedicine() {
         return medicineRepo.count();
+    }
+    public List<Medicine> searchMedicines(String query) {
+        return medicineRepo.findByMedNameContainingIgnoreCaseOrMedTypeContainingIgnoreCaseOrManufacturerContainingIgnoreCase(query, query, query);
     }
 
 }

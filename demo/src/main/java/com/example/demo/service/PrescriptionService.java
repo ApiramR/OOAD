@@ -57,32 +57,9 @@ public class PrescriptionService{
         return columnNames.toArray(new String[0]);
     }
 
-    
+    public long countAllPrescriptions() {
+        return rep.count();
+    }
 
-    // public Prescription updatePrescription(Long presId, Prescription updatedPrescription) {
-    //     // Fetch the existing prescription
-    //     Prescription existingPrescription = prescriptionRepository.findById(presId)
-    //             .orElseThrow(() -> new RuntimeException("Prescription not found"));
 
-    //     // Check and set the patient reference if provided
-    //     if (updatedPrescription.getPatient() != null) {
-    //         // If the patient is provided and exists in the database, set it
-    //         Patient patient = updatedPrescription.getPatient();
-    //         if (patient.getId() != null) {
-    //             patientRepository.findById(patient.getId())
-    //                     .orElseThrow(() -> new RuntimeException("Patient not found for ID: " + patient.getId()));
-    //         }
-    //         existingPrescription.setPatient(patient);
-    //     }
-
-    //     // Update other fields
-    //     existingPrescription.setMeds(updatedPrescription.getMeds());
-    //     existingPrescription.setDosage(updatedPrescription.getDosage());
-    //     existingPrescription.setDescription(updatedPrescription.getDescription());
-    //     existingPrescription.setDateIssued(updatedPrescription.getDateIssued());
-
-    //     // Save and return the updated prescription
-    //     return prescriptionRepository.save(existingPrescription);
-    // }
-    
 }

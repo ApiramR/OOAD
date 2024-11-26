@@ -139,7 +139,7 @@ public class PrescriptionController {
             Prescription savedPrescription = prescriptionService.addPrescription(prescription);
             return new ResponseEntity<>(savedPrescription, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -206,7 +206,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countInventoryItems() {
+    public ResponseEntity<Long> countPrescription() {
         try {
             long itemCount = prescriptionService.countAllPrescriptions();
             return ResponseEntity.ok(itemCount);

@@ -12,17 +12,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashMap;
 import java.util.Map;
 
 
 @Controller
 public class pharmacyController {
     @Autowired
-    private final PharmacyService pharmacyService;
+    private PharmacyService pharmacyService;
 
     @Autowired
     private ModelMapperUtil modelMapperUtil;
@@ -73,16 +73,21 @@ public class pharmacyController {
         return "Pharmacy/pharmacy-inventory";
     }
 
+    @RequestMapping(value="/pharmacy/{username}/ordermedicine")
+    public String pharmacyOrderMedicine(Model model,@PathVariable String username){
+        if (inventoryController.Authentication(username)) return "redirect:/login?loginagain";
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        String profilePicture = "/images/" + pharmacy.getProfilepicture();
+        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, pharmacyService.getFields());
+        pharmacyDict.put("profilepic",profilePicture);
+        model.addAttribute("pharmacy",pharmacyDict);
+        model.addAttribute("age",Period.between(pharmacy.getDOB(), LocalDate.now()).getYears());
+        return "Pharmacy/pharmacy-ordermedicine";
+    }
+
     @RequestMapping(value="/pharmacy/{username}/prescriptions",method = RequestMethod.GET)
     String pharmacyPrescriptions(Model model){
         if (Auth(model)) return "redirect:/login";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-
-        String[] fields = pharmacyService.getFields();
-        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
-
         return "/Pharmacy/pharmacy-prescriptions";
     }
 
@@ -90,72 +95,57 @@ public class pharmacyController {
     @RequestMapping(value="/pharmacy/{username}",method = RequestMethod.GET)
     String urlDashboard(Model model){
         if (Auth(model)) return "redirect:/login";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-
-        String[] fields = pharmacyService.getFields();
-        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
         return "/Pharmacy/pharmacy-dashboard";
     }
 
-    @RequestMapping(value="/pharmacy/{username}/settings",method = RequestMethod.GET)
-    String pharmacySettings(Model model){
+    @RequestMapping(value="/pharmacy/settings",method = RequestMethod.GET)
+    public String pharmacySettings(Model model){
         if (Auth(model)) return "redirect:/login";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-
-        String[] fields = pharmacyService.getFields();
-        Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
-
         return "Pharmacy/pharmacy-settings";
     }
     
-    @PostMapping("pharmacy/{username}/settings")
-    public ResponseEntity<?> updatePharmacySettings(
-            @PathVariable String username,
-            @RequestParam Map<String, String> formData,
-            @RequestParam(required = false) MultipartFile profilepicture) {
-        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-        if (pharmacy == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pharmacy not found");
-        }
-        // Update other settings
-        boolean updateStatus = pharmacyService.updatePharmacy(formData, pharmacy);
-        if (!updateStatus) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update settings");
+    @PostMapping("/pharmacy/settings")
+    @ResponseBody
+    public ResponseEntity<?> PatientChangeSettings(@RequestParam Map<String, String> formData){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
 
-        // Save the updated pharmacy
-        pharmacyService.addPharmacy(pharmacy);
-        return ResponseEntity.ok(pharmacy);
+        System.out.println("Yo i am here");
+        Map<String,Object> response = new HashMap<String,Object>();
+        String username = authentication.getName();
+        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+        System.out.println(username);
+        if (pharmacyService.updatePharmacy(formData,pharmacy)){
+            String[] fields = pharmacyService.getFields();
+            response = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
+            return ResponseEntity.ok(response);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
+        }
     }
 
-    @PutMapping("pharmacy/{username}/settings")
-    public ResponseEntity<?> updatePharmacySettings(
-            @PathVariable String username,
-            @RequestBody Map<String, String> updatedData) {
-        Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
-        if (pharmacy == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pharmacy not found");
-        }
-        // Update fields from the request
-        pharmacy.setFname(updatedData.get("Fname"));
-        pharmacy.setLname(updatedData.get("Lname"));
-        pharmacy.setPno(updatedData.get("pno"));
-        pharmacy.setAddress(updatedData.get("address"));
-        pharmacy.setOpeningHours(updatedData.get("openingHours"));
+    // @PutMapping("pharmacy/{username}/settings")
+    // public ResponseEntity<?> updatePharmacySettings(
+    //         @PathVariable String username,
+    //         @RequestBody Map<String, String> updatedData) {
+    //     Pharmacy pharmacy = pharmacyService.getPharmacyByUsername(username);
+    //     if (pharmacy == null) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pharmacy not found");
+    //     }
+    //     // Update fields from the request
+    //     pharmacy.setFname(updatedData.get("Fname"));
+    //     pharmacy.setLname(updatedData.get("Lname"));
+    //     pharmacy.setPno(updatedData.get("pno"));
+    //     pharmacy.setAddress(updatedData.get("address"));
+    //     pharmacy.setOpeningHours(updatedData.get("openingHours"));
 
-        // Save the updated pharmacy
-        pharmacyService.addPharmacy(pharmacy);
-        return ResponseEntity.ok("Settings updated successfully");
-    }
-
-
-
-
-
+    //     // Save the updated pharmacy
+    //     pharmacyService.addPharmacy(pharmacy);
+    //     return ResponseEntity.ok("Settings updated successfully");
+    // }
     @RequestMapping(value = "/pharmacy/debug", method = RequestMethod.GET)
     public String debugPharmacyAccess() {
         return "Debugging Pharmacy Access";

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang = "en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>OOAD</title>
+  <title>Inventory</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel = "stylesheet" type = "text/css" href = "/css/dashboard.css">
@@ -51,7 +51,8 @@
     <a th:href="@{/pharmacy/{username}(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">  Overview  </a>
     <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding">Prescriptions </a>
     <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue">Inventory & Medicine  </a>
-    <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Profile Settings  </a>
+    <a th:href="@{/pharmacy/{username}/ordermedicine(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Order Medicine  </a>
+    <a th:href="@{/pharmacy/settings}" class="w3-bar-item w3-button w3-padding">Profile Settings  </a>
 
   </div>
 </nav>
@@ -111,6 +112,7 @@
 
 
     </form>
+
     <div id="responseMessage"></div>
     <hr>
     <div>
@@ -352,16 +354,19 @@
       $("#quantityInStock").val(row.find(".quantity").text());
     });
 
-    // Fetch inventory
-    function fetchInventory() {
-      $.get('/api/inventory/all', function (response) {
-        const tableBody = $("#inventoryTable tbody");
-        tableBody.empty();
-        if (response.length === 0) {
-          tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
-        } else {
-          response.forEach(item => {
-            tableBody.append(`
+
+  });
+
+  // Fetch inventory
+  function fetchInventory() {
+    $.get('/api/inventory/all', function (response) {
+      const tableBody = $("#inventoryTable tbody");
+      tableBody.empty();
+      if (response.length === 0) {
+        tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
+      } else {
+        response.forEach(item => {
+          tableBody.append(`
                     <tr>
                         <td class="id">${item.inventoryID}</td>
                         <td class="medID">${item.medID}</td>
@@ -373,13 +378,10 @@
                         <td><button class="w3-button w3-blue editBtn">Edit</button></td>
                     </tr>
                 `);
-          });
-        }
-      });
-    }
-
-
-  });
+        });
+      }
+    });
+  }
 </script>
 
 </body>

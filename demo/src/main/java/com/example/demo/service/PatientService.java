@@ -48,7 +48,7 @@ public class PatientService {
     }
 
     public Patient getPatientByID(Long patientID){
-        return rep.findById(patientID).orElse(new Patient());
+        return rep.findById(patientID).orElse(null);
     } 
     public Patient getPatientByUsername(String username){
         return rep.findByUsername(username);

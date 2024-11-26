@@ -41,9 +41,8 @@ public class MedicineService {
     public MedicineService(MedicineRepo medicineRepo) {
         this.medicineRepo = medicineRepo;
     }
-
-    public List<Long> getMedIDsByMedName(String medName) {
-        return medicineRepo.findMedIDByMedName(medName);
+    public Medicine getMedBymedName(String meds){
+        return medicineRepo.findBymedName(meds);
     }
 }
 

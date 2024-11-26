@@ -45,24 +45,13 @@ public class MedicineService {
     public MedicineService(MedicineRepo medicineRepo) {
         this.medicineRepo = medicineRepo;
     }
-
-    public Medicine getMedicineByMedID(Long medID) {
-        return medicineRepo.findByMedID(medID);
+    public Medicine getMedBymedName(String meds){
+        return medicineRepo.findBymedName(meds);
     }
 
     // Save or update Medicine
     public Medicine saveMedicine(Medicine medicine) {
         return medicineRepo.save(medicine);
-    }
-
-    public List<Long> getMedIDsByMedName(String medName) {
-        return medicineRepo.findMedIDByMedName(medName);
-    }
-
-
-
-    public List<Medicine> searchMedicines(String query) {
-        return medicineRepo.findByMedNameContainingIgnoreCaseOrMedTypeContainingIgnoreCaseOrManufacturerContainingIgnoreCase(query, query, query);
     }
 
     public long countAllMedicine() {

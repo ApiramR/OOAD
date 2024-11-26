@@ -1,12 +1,19 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Setter
 @Getter
@@ -21,15 +28,6 @@ public class Prescription {
     @Column(name="presid")
     private Long presID;
 
-    /*@ManyToOne
-    @JoinColumn(name = "dID", nullable = false)
-    private Doctor doctor;
-    */
-
-    @ManyToOne
-    @JoinColumn(name="PID",nullable=false)
-    private Patient patient;
-
     @Column(nullable=false)
     private String meds;
 
@@ -42,6 +40,24 @@ public class Prescription {
     @Column(nullable=true)
     private String description;
 
-    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
-    private List<PharmacyPrescription> pharmacyPrescriptions;
+    @ManyToOne
+    @JoinColumn(name = "PID", nullable = false)
+    private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name = "DID", nullable = false)
+    private Doctor doctor;
+
+    public Prescription(String meds,String dosage,String dataIssued,String description,Patient patient,Doctor doctor){
+        this.meds = meds;
+        this.dosage = dosage;
+        this.dateIssued = dataIssued;
+        this.description = description;
+        this.patient = patient;
+        this.doctor = doctor;
+    }
+
 }
+
+
+

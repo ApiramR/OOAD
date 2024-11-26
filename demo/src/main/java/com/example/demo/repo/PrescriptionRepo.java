@@ -7,4 +7,5 @@ import com.example.demo.model.Prescription;
 
 @Repository
 public interface PrescriptionRepo extends JpaRepository<Prescription , Long>{
+    
 }

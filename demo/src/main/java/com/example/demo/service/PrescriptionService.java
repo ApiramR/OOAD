@@ -17,17 +17,26 @@ import jakarta.persistence.metamodel.EntityType;
 public class PrescriptionService{
 
     @Autowired
-    PrescriptionRepo rep;
-    @Autowired
-    private PrescriptionRepo prescriptionRepo;
-
+    private PrescriptionRepo rep;
+    
     public Prescription addPrescription(Prescription prescription){
         return rep.save(prescription);
     }
     
-    public Prescription updatePrescription(Prescription prescription){
-        return rep.save(prescription);
-    }
+    // public Prescription updatePrescription(Prescription prescription){
+    //     return rep.save(prescription);
+    // }
+
+
+    // public Prescription updatePrescription(Prescription prescription) {
+    //     // Check if the prescription ID exists
+    //     if (!prescriptionRepo.existsById(prescription.getPresID())) {
+    //         throw new RuntimeException("Prescription not found with ID: " + prescription.getPresID());
+    //     }
+
+    //     // Save and return the updated prescription
+    //     return prescriptionRepo.save(prescription);
+    // }
 
     public Prescription getPrescriptionByID(Long PresID){
         return rep.findById(PresID).orElse(new Prescription());
@@ -48,8 +57,32 @@ public class PrescriptionService{
         return columnNames.toArray(new String[0]);
     }
 
-    public long countAllPrescriptions() {
-        return prescriptionRepo.count();
-    }
+    
+
+    // public Prescription updatePrescription(Long presId, Prescription updatedPrescription) {
+    //     // Fetch the existing prescription
+    //     Prescription existingPrescription = prescriptionRepository.findById(presId)
+    //             .orElseThrow(() -> new RuntimeException("Prescription not found"));
+
+    //     // Check and set the patient reference if provided
+    //     if (updatedPrescription.getPatient() != null) {
+    //         // If the patient is provided and exists in the database, set it
+    //         Patient patient = updatedPrescription.getPatient();
+    //         if (patient.getId() != null) {
+    //             patientRepository.findById(patient.getId())
+    //                     .orElseThrow(() -> new RuntimeException("Patient not found for ID: " + patient.getId()));
+    //         }
+    //         existingPrescription.setPatient(patient);
+    //     }
+
+    //     // Update other fields
+    //     existingPrescription.setMeds(updatedPrescription.getMeds());
+    //     existingPrescription.setDosage(updatedPrescription.getDosage());
+    //     existingPrescription.setDescription(updatedPrescription.getDescription());
+    //     existingPrescription.setDateIssued(updatedPrescription.getDateIssued());
+
+    //     // Save and return the updated prescription
+    //     return prescriptionRepository.save(existingPrescription);
+    // }
     
 }

@@ -26,11 +26,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.model.Medicine;
 import com.example.demo.model.Patient;
+import com.example.demo.model.PatientComments;
+import com.example.demo.model.Pharmacy;
 import com.example.demo.model.Prescription;
 import com.example.demo.model.Report;
+import com.example.demo.service.MedicineService;
 import com.example.demo.service.ModelMapperUtil;
 import com.example.demo.service.PatientService;
+import com.example.demo.service.PharmacyService;
 import com.example.demo.service.ReportService;
 
 import org.springframework.ui.Model;
@@ -45,6 +50,12 @@ public class PatientController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private MedicineService medicineService;
+
+    @Autowired
+    private PharmacyService pharmacyService;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -94,10 +105,10 @@ public class PatientController {
         }
         Patient patient = patientService.getPatientByUsername(username);
         List<Prescription>prescriptions = patient.getPrescriptions();
-        String prescriptionpath = "/prescription/";
+        List<PatientComments>comments = patient.getComments();
         initialize(username, model, patient);
-        model.addAttribute("reports",prescriptions);//change it to prescriptions
-        model.addAttribute("prescriptionpath",prescriptionpath);
+        model.addAttribute("comments",comments);
+        model.addAttribute("prescriptions",prescriptions);//change it to prescriptions
         return "PatientPrescriptions.html";
     }
     //Patientprofile
@@ -194,6 +205,18 @@ public class PatientController {
         else{
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
+    }
+    @GetMapping("/patient/search/{medid}")
+    public String ListofPharmacy(Model model,@PathVariable String medid){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Patient patient = patientService.getPatientByUsername(username);
+        Medicine medicine = medicineService.getMedicineByMedID(Long.parseLong(medid));
+        model.addAttribute("medname",medicine.getMedName());
+        List<Pharmacy>pharmacy = pharmacyService.searchPharmacy(Long.parseLong(medid));
+        model.addAttribute("pharmacy",pharmacy);
+        initialize(username,model, patient);
+        return "PatientPharmacy.html";
     }
     @RequestMapping(value = "/patient/debug", method = RequestMethod.GET)
     public String debugPatientAccess() {

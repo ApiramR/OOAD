@@ -20,6 +20,7 @@ public class PrescriptionService{
     private PrescriptionRepo rep;
     
     public Prescription addPrescription(Prescription prescription){
+        System.out.println("Yo whats going on!");
         return rep.save(prescription);
     }
     

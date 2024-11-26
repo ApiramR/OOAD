@@ -120,7 +120,7 @@
                 </tr>
             </table>
             <hr>
-            <h5>Add Prescription: <a th:href = "@{/doctor/patient/{patientID}(patientId=${patient.PatientID})}">Click Here</a></h5>
+            <h5>Add Prescription: <a th:href="@{/doctor/patient/{patientID}(patientID=${patient.PatientID})}">Click Here</a></h5>
             <h5 th:if="${prescription}" th:text = "${prescription}"></h5>
             <form th:action="@{/doctor/{pid}/comment(pid=${patient.PatientID})}" method = "POST">
                 <div class="w3-section">
@@ -128,7 +128,7 @@
                     <textarea id="comment" name="comment" class="w3-input w3-border w3-round" rows="4" placeholder="Comments on patient health condition" required></textarea>
                 </div>
                 <div class="w3-section">
-                    <button type="submit" class="w3-button w3-blue w3-round w3-block">Submit Prescription</button>
+                    <button type="submit" class="w3-button w3-blue w3-round w3-block">Submit Comment</button>
                 </div>
             </form>
             

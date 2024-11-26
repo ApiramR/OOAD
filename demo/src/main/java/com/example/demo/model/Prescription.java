@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,9 @@ public class Prescription {
     @Column(name="presid")
     private Long presID;
 
-    @Column(nullable=false)
-    private String meds;
+    @OneToOne
+    @JoinColumn(name = "MID", nullable = false)
+    private Medicine meds;
 
     @Column(nullable=false)
     private String dosage;
@@ -40,6 +42,9 @@ public class Prescription {
     @Column(nullable=true)
     private String description;
 
+    @Column(nullable=false)
+    private int count;
+
     @ManyToOne
     @JoinColumn(name = "PID", nullable = false)
     private Patient patient;
@@ -48,13 +53,16 @@ public class Prescription {
     @JoinColumn(name = "DID", nullable = false)
     private Doctor doctor;
 
-    public Prescription(String meds,String dosage,String dataIssued,String description,Patient patient,Doctor doctor){
+    
+
+    public Prescription(int count,Medicine meds,String dosage,String dataIssued,String description,Patient patient,Doctor doctor){
         this.meds = meds;
         this.dosage = dosage;
         this.dateIssued = dataIssued;
         this.description = description;
         this.patient = patient;
         this.doctor = doctor;
+        this.count = count;
     }
 
 }

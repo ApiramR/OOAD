@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Doctor;
+import com.example.demo.model.Medicine;
 import com.example.demo.model.Patient;
 import com.example.demo.model.Prescription;
 import com.example.demo.model.Report;
@@ -82,6 +83,9 @@ public class DoctorController {
             Map<String, Object> patientDict = modelMapperUtil.mapFieldsToGetters(patient, fields);
             model.addAttribute("patient",patientDict);  
             model.addAttribute("age",Period.between(patient.getDOB(), LocalDate.now()).getYears());
+            model.addAttribute("patientID",patientID.toString());
+            System.out.println(patientID);
+            System.out.println(patient.getPatientID());
             model.addAttribute("success","Found Successfully");  
         }
         initialize(username, model, doctor);
@@ -158,27 +162,37 @@ public class DoctorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
     }
-    @GetMapping("/doctor/patient/{patientID}")
-    public String Addprescription(Model model,@PathVariable String patientID){
-        model.addAttribute("patientID",patientID);
+    @GetMapping("/doctor/patient/{pID}")
+    public String Addprescription(Model model,@PathVariable String pID){
+        model.addAttribute("patientID",pID);
+        System.out.println(pID);
         return "Doctor/AddPrescription.html";
     }
-    @PostMapping("/doctor/patient/{patientID}")
-    public String AddPrescription(Model model,@PathVariable String patientID,Map<String,String>formData){
+    @PostMapping("/doctor/patient/{pID}")
+    public String AddPrescription(Model model,@PathVariable String pID, @RequestParam Map<String,String>formData){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null){
             return "redirect:/login?loginagain";
         }
         String username = authentication.getName();
-        if (medicineService.getMedBymedName(formData.get("meds")) == null){
+        for (Map.Entry<String, String> entry : formData.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+        }
+        System.out.println(pID);
+        System.out.println(formData.get("meds"));
+        Medicine medicine = medicineService.getMedBymedName(formData.get("meds"));
+        System.out.println("Whats the error here?");
+        if (medicine == null){
+            System.out.println("Is it really NULL");
             model.addAttribute("prescription","medicine not found, Try again!");
             return "redirect:/doctor/" + username + "/patient";
         }
-        Patient patient = patientService.getPatientByID(Long.parseLong(patientID));
+        Patient patient = patientService.getPatientByID(Long.parseLong(pID));
         Doctor doctor = doctorService.getDoctorByUsername(username);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedDate = LocalDateTime.now().format(formatter);
-        Prescription prescription = new Prescription(formData.get("meds"),formData.get("dosage"),formattedDate
+            
+        Prescription prescription = new Prescription(Integer.parseInt(formData.get("count")),medicine,formData.get("dosage"),formattedDate
                                         ,formData.get("description"),patient,doctor);
         prescriptionService.addPrescription(prescription);
         model.addAttribute("prescription","added sucessfully");

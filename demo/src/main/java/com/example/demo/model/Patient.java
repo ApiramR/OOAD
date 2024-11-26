@@ -47,6 +47,9 @@ public class Patient extends Userr{
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prescription> prescriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PatientComments> comments = new ArrayList<>();    
     
     @PrePersist
     public void prePersist() {

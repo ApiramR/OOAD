@@ -20,7 +20,7 @@
             integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
             crossorigin="anonymous">
         </script>
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body class="w3-light-grey">
         <!-- Top container -->
@@ -33,10 +33,11 @@
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
-                <img th:src="${patient.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px" alt="profile picture">
+            <img th:src="${patient.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px">
             </div>
             <div class="w3-col w3-bar">
             <span>Welcome, <strong th:text="${patient.Fname} + ' ' + (${patient.Mname} != null and ${patient.Mname} != '' ? ${patient.Mname} + ' ' : '') + ${patient.Lname}"></strong></span><br>
+            
             </div>
         </div>
         <hr>
@@ -47,7 +48,7 @@
             <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
             <a th:href="@{/patient/{username}/profile(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
             <a th:href="@{/patient/{username}/reports(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Reports  </a>
-            <a th:href="@{/patient/{username}/prescriptions(username=${patient.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-bullseye fa-fw"></i>  Prescriptions </a>
+            <a th:href="@{/patient/{username}/prescriptions(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Prescriptions </a>
             <a th:href="@{/patient/settings(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
         </div>
     </nav>
@@ -67,46 +68,23 @@
 
     <div class="w3-panel">
         <div class="w3-row-padding" style="margin:0 -16px">
-        
         <div class="w3-twothird">
-            <h5>Prescriptions</h5>
-            <table class="w3-table w3-striped w3-white" id = "prescriptlist">
-                <tr>
-                    <td>Medicine ID</td>
-                    <td>Dosage</td>
-                    <td>Date Issued</td>
-                    <td>Remaining Count</td>
-                    <td>Available Pharmacy</td>
-                    <!-- <td><a th:text = "${instance.des}" type="application/pdf" target="_blank">view report</a></td> -->
-                </tr>
-                <tr th:each = "instance : ${prescriptions}" th:if="${instance.count != 0}">
-                    <td th:text="${instance.meds.medID}"></td>
-                    <td th:text="${instance.dosage}"></td>
-                    <td th:text="${instance.dateIssued}"></td>
-                    <td th:text="${instance.count}"></td>
-                    <td><a th:href = "@{/patient/search/{medid}(medid=${instance.meds.medID})}">Find the Pharmacy</a></td>
-                    <!-- <td><a th:text = "${instance.des}" type="application/pdf" target="_blank">view report</a></td> -->
-                    
-                </tr>
-            </table>
+             <h5 th:text = "'List of Pharmacy has ' + ${medname}"></h5> 
+                  <table class="w3-table w3-striped w3-white" id = "pharmacyList">
+                    <tr>
+                        <td>Pharmacy Name</td>
+                        <td>Address</td>
+                    </tr>
+                    <tr th:each = "instance : ${pharmacy}">
+                        <td th:text="${instance.Fname} + ${instance.Lname} :"></td>
+                        <td th:text="${instance.address}"></td>
+                    </tr>
+                </table>  
         </div>
         </div>
     </div>
     
     <hr>
-
-    <div class="w3-container">
-        <h5>Recent Comments</h5>
-        <div class="w3-row">
-        <div class="w3-col m10 w3-container" th:each = "instance : ${comments}">
-            <h4 th:text="${instance.doctor.username}">
-            </h4> <span class="w3-opacity w3-medium" th:text="${instance.createdDate}"></span>
-            <p th:text = "${instance.content}"></p><br>
-        </div>
-        </div>
-    </div>
-    <br>
-    
 
     <!-- Footer -->
     <footer class="w3-container w3-padding-16 w3-light-grey">
@@ -115,7 +93,7 @@
     </footer>
 
     <!-- End page content -->
-    </div>
+    
 
     <script>
     // Get the Sidebar
@@ -137,8 +115,8 @@
 
     // Close the sidebar with the close button
     function w3_close() {
-        mySidebar.style.display = "none";
-        overlayBg.style.display = "none";
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
     }
     </script>
 

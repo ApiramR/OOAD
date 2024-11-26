@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Inventory;
+import com.example.demo.model.Medicine;
 import com.example.demo.model.Pharmacy;
 import com.example.demo.repo.PharmacyRepo;
 
@@ -81,7 +83,21 @@ public class PharmacyService {
         return rep.findById(id)
                 .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
     }
-
+    public List<Pharmacy> searchPharmacy(Long medid){
+        List<Pharmacy>allpharmacy = rep.findAll();
+        List<Pharmacy>pharmacyList = new ArrayList<Pharmacy>();
+        for (Pharmacy pharmacy:allpharmacy){
+            List<Inventory>inventories = pharmacy.getInventories();
+            for (Inventory inventory:inventories){
+                Medicine medicine = inventory.getMedicine();
+                if (medicine!= null && medicine.getMedID() == medid){
+                    pharmacyList.add(pharmacy);
+                    break;
+                }
+            }
+        }
+        return pharmacyList;
+    }
 
     public Boolean updatePharmacy(Map<String, String> formData, Pharmacy pharmacy) {
             try {

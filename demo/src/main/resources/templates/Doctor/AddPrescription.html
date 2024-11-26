@@ -27,8 +27,7 @@
         <div class="form-header w3-text-blue">
             <strong>Prescription Form</strong>
         </div>
-
-        <form th:action ="@{/doctor/patient/{patientID}(patientID=${patientID})}" method = "POST" class="w3-container" id="prescriptionForm">
+        <form th:action="@{/doctor/patient/{pID}(pID=${patientID})}" method = "POST" class="w3-container" id="prescriptionForm">
             <!-- Medicine Name -->
             <div class="w3-section">
                 <label for="medicine" class="w3-text-grey"><b>Medicine Name:</b></label>
@@ -48,7 +47,7 @@
             <!-- Description -->
             <div class="w3-section">
                 <label for="description" class="w3-text-grey"><b>Description:</b></label>
-                <textarea id="description" name="description" class="w3-input w3-border w3-round" rows="4" placeholder="Add any additional details..." required></textarea>
+                <textarea id="description" name="description" class="w3-input w3-border w3-round" rows="4" placeholder="Add any additional details..."></textarea>
             </div>
 
             <!-- Submit Button -->

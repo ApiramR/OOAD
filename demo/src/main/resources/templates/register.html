@@ -91,6 +91,7 @@
         function addfield(){
             const role = document.getElementById("role").value;
             const field = document.getElementById("addquest");
+            field.innerHTML="";
             if (role === "Doctor"){
                 const input = document.createElement('input');
                 input.setAttribute('type', 'text');

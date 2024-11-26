@@ -21,8 +21,7 @@ import jakarta.persistence.metamodel.EntityType;
 public class PharmacyService {
     @Autowired
     PharmacyRepo rep;
-    @Autowired
-    private PharmacyRepo pharmacyRepo;
+
 
     @Value("${file.upload-dir2}")
     private String imageuploaddir;
@@ -79,21 +78,21 @@ public class PharmacyService {
 
 
     public Pharmacy findById(Long id) {
-        return pharmacyRepo.findById(id)
+        return rep.findById(id)
                 .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + id));
     }
 
 
     public Boolean updatePharmacy(Map<String, String> formData, Pharmacy pharmacy) {
             try {
+                System.out.println("wtf happening");
                 for (Map.Entry<String, String> entry : formData.entrySet()) {
                     String fieldName = entry.getKey();
                     String fieldValue = entry.getValue();
-
                     if (fieldValue == null || fieldValue.isEmpty()) {
                         continue;
                     }
-
+                    System.out.println(fieldName + " " + (String)fieldValue);
                     // Handle password encoding
                     if ("Password".equalsIgnoreCase(fieldName)) {
                         fieldValue = passwordEncoder.encode(fieldValue);
@@ -105,7 +104,7 @@ public class PharmacyService {
                     setter.invoke(pharmacy, fieldValue);
                 }
                 // Save the updated pharmacy
-                pharmacyRepo.save(pharmacy);
+                rep.save(pharmacy);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

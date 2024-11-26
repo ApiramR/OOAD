@@ -4,7 +4,6 @@
   <title>Settings</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel = "stylesheet" type = "text/css" href = "/css/dashboard.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <link href='https://fonts.googleapis.com/css?family=Corinthia' rel='stylesheet'>
@@ -35,7 +34,7 @@
   <div class="w3-container w3-row">
 
     <div class="w3-col w3-bar">
-      <span>
+      <span id = "welcomecard">
   <strong th:text="${pharmacy.Fname} + ' ' + ${pharmacy.Lname}" style="font-size: 1.5em;"></strong></span><br>
     </div>
   </div>
@@ -51,7 +50,7 @@
     <a th:href="@{/pharmacy/{username}/prescriptions(username=${pharmacy.username})}"  class="w3-bar-item w3-button w3-padding">Prescriptions </a>
     <a th:href="@{/pharmacy/{username}/inventory(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Inventory & Medicine  </a>
     <a th:href="@{/pharmacy/{username}/ordermedicine(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding">Order Medicine  </a>
-    <a th:href="@{/pharmacy/{username}/settings(username=${pharmacy.username})}" class="w3-bar-item w3-button w3-padding w3-blue">Profile Settings  </a>
+    <a th:href="@{/pharmacy/settings}" class="w3-bar-item w3-button w3-padding w3-blue">Profile Settings  </a>
 
   </div>
 </nav>
@@ -77,32 +76,32 @@
           <tr>
             <td><i class="fa w3-text-blue w3-large"></i></td>
             <td>Company Name</td>
-            <td><i th:text = "${pharmacy.Fname} + ' ' + (${pharmacy.Mname != ''}?pharmacy.Mname + ' ':'') + ${pharmacy.Lname}"></i></td>
+            <td><i id = "pharmacyname" th:text = "${pharmacy.Fname} + ' ' + ${pharmacy.Lname}"></i></td>
           </tr>
           <tr>
             <td><i class="fa w3-text-red w3-large"></i></td>
             <td>Username</td>
-            <td><i th:text = "${pharmacy.username}"></i></td>
+            <td><i id = "pharmacyusername" th:text = "${pharmacy.username}"></i></td>
           </tr>
           <tr>
             <td><i class="fa w3-text-blue w3-large"></i></td>
             <td>Contact Number</td>
-            <td><i th:text = "${pharmacy.pno}"></i></td>
+            <td><i id = "pharmacypno" th:text = "${pharmacy.pno}"></i></td>
           </tr>
           <tr>
             <td><i class="fa w3-text-yellow w3-large"></i></td>
             <td>Email Address</td>
-            <td><i th:text = "${pharmacy.email}"></i></td>
+            <td><i id = "pharmacyemail" th:text = "${pharmacy.email}"></i></td>
           </tr>
           <tr>
             <td><i class="fa w3-text-green w3-large"></i></td>
             <td>Address</td>
-            <td><i th:text="${pharmacy.address}"></i></td>
+            <td><i id = "pharmacyaddress" th:text="${pharmacy.address}"></i></td>
           </tr>
           <tr>
             <td><i class="fa w3-text-green w3-large"></i></td>
             <td>Opening Hours</td>
-            <td><i th:text="${pharmacy.openingHours}"></i></td>
+            <td><i id = "pharmacyopening" th:text="${pharmacy.openingHours}"></i></td>
           </tr>
         </table>
       </div>
@@ -113,7 +112,7 @@
 
   <div class="w3-container">
     <h5>Profile Settings</h5>
-    <form id = "pharmacySettingsForm" th:action = "@{/pharmacy/settings(username=${pharmacy.username})}" method = "POST" enctype="multipart/form-data">
+    <form id = "pharmacySettingsForm" action = "/pharmacy/settings" method = "POST" >
       <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
 
         <tr>
@@ -139,7 +138,7 @@
         </tr>
         <tr>
           <td>Change Opening Hours</td>
-          <td><input id = "openhours" class="w3-input w3-border w3-round w3-right" name = "bloodtype" type="text" placeholder="ex: from Monday to Saturday from 9am to 8pm"></td>
+          <td><input id = "openhours" class="w3-input w3-border w3-round w3-right" name = "openingHours" type="text" placeholder="ex: from Monday to Saturday from 9am to 8pm"></td>
         </tr>
 
       </table><br>
@@ -152,7 +151,7 @@
         <p id="lengt" class="invalid">Minimum <b>8 characters</b></p>
       </div>
       <!--<button class="w3-button w3-dark-grey" id="saveSettings">Apply Changes </button>-->
-      <button class="w3-button w3-dark-grey" type="button" id="saveSettings">Apply Changes</button>
+      <button class="w3-button w3-dark-grey" id="saveSettings">Apply Changes</button>
     </form>
     <div id="responseMessage"></div>
   </div>
@@ -234,54 +233,53 @@
   }
 
   $(document).ready(function () {
-
-    $(document).ready(function () {
       // Automatically populate the form with pharmacy data
-      function populateForm(pharmacyData) {
-        $("#Fname").val(pharmacyData.Fname);
-        $("#Lname").val(pharmacyData.Lname);
-        $("#pno").val(pharmacyData.pno);
-        $("#address").val(pharmacyData.address);
-        $("#openhours").val(pharmacyData.openingHours);
-      }
+      // function populateForm(pharmacyData) {
+      //   $("#Fname").val(pharmacyData.Fname);
+      //   $("#Lname").val(pharmacyData.Lname);
+      //   $("#pno").val(pharmacyData.pno);
+      //   $("#address").val(pharmacyData.address);
+      //   $("#openhours").val(pharmacyData.openingHours);
+      // }
 
-      // Extract pharmacy data from Thymeleaf variables
-      const pharmacyData = {
-        Fname: $("strong").attr("th:text").split(' ')[0], // Example to fetch Fname
-        Lname: $("strong").attr("th:text").split(' ')[1], // Example to fetch Lname
-        pno: $("#contactNumber").text(),
-        address: $("#addressData").text(),
-        openingHours: $("#openHoursData").text()
-      };
+      // // Extract pharmacy data from Thymeleaf variables
+      // const pharmacyData = {
+      //   Fname: $("strong").attr("th:text").split(' ')[0], // Example to fetch Fname
+      //   Lname: $("strong").attr("th:text").split(' ')[1], // Example to fetch Lname
+      //   pno: $("#contactNumber").text(),
+      //   address: $("#addressData").text(),
+      //   openingHours: $("#openHoursData").text()
+      // };
 
-      populateForm(pharmacyData);
+      // populateForm(pharmacyData);
 
       // Apply changes and update data using PUT
       $("#saveSettings").on("click", function (event) {
         event.preventDefault();
-
-        const updatedData = {
-          Fname: $("#Fname").val(),
-          Lname: $("#Lname").val(),
-          pno: $("#pno").val(),
-          address: $("#address").val(),
-          openingHours: $("#openhours").val()
-        };
-
+        var formData = new FormData($("#pharmacySettingsForm")[0]);
         $.ajax({
-          url: `/pharmacy/${pharmacyData.username}/settings`,
-          type: 'PUT',
-          contentType: 'application/json',
-          data: JSON.stringify(updatedData),
+          url: `/pharmacy/settings`,
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData:false,
           success: function (response) {
             $("#responseMessage").text("Settings updated successfully!");
+            let updatedName = response.Fname + " " +
+                    response.Lname;
+            console.log(updatedName);
+            $("#pharmacyname").text(updatedName);
+            $("#pharmacyusername").text(response.username);
+            $("pharmacyno").text(response.pno);
+            $("pharmacyemail").text(response.email);
+            $("pharmacyopening").text(response.openingHours);
+            $("#welcomecard strong").text(updatedName);
           },
           error: function (xhr) {
             $("#responseMessage").text("Update failed: " + xhr.responseText);
           }
         });
       });
-    });
 
 
   });

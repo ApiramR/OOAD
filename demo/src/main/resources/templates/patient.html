@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Details</title>
-    <link rel="stylesheet" type="text/css" href="/css/patient.css"> <!-- Assuming you use the same CSS file -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/patient.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 </head>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <h1>Search Patient by ID</h1>
-        </header>
+        <div class="w3-container">
+            <h2>Search Patient Details</h2>
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <div class="search-icon">
-                <i class="fa fa-search"></i> <!-- Search icon -->
+            <!-- Search Form -->
+            <form id="sPatient">
+                <div>
+                    <input name="patientID" type="number" id="patientSearch" placeholder="Enter Patient ID" />
+                    <button type="button" id="patientSearchBtn" class="w3-button w3-green">Search</button>
+                </div>
+            </form>
+
+            <!-- Error Message -->
+            <div id="errorMessage" style="color: red; display: none;">
+                <p>No patient found with the given ID.</p>
             </div>
-            <input type="text" id="searchInput" placeholder="Enter Patient ID..." required />
-            <button id="searchButton">Search</button>
+
+            <!-- Patient Details -->
+            <div class="w3-panel" id="patientDetails" style="display: none;">
+                <div class="w3-row-padding" style="margin:0 -16px">
+                    <div class="w3-twothird">
+                        <h5>General Information</h5>
+                        <table class="w3-table w3-striped w3-white">
+                            <tr>
+                                <td>Full Name:</td>
+                                <td id="patientName"></td>
+                            </tr>
+                            <tr>
+                                <td>Gender:</td>
+                                <td id="gender"></td>
+                            </tr>
+                            <tr>
+                                <td>Phone Number:</td>
+                                <td id="contact"></td>
+                            </tr>
+                            <tr>
+                                <td>Age:</td>
+                                <td id="age"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Patient Details Panel -->
-        <section class="patient-details-panel">
-            <div class="patient-details-columns">
-                <!-- Personal Details Column -->
-                <div class="personal-details">
-                    <h3>Patient Personal Details</h3>
-                    <p><strong>Name:</strong> <span id="patientName">John Doe</span></p>
-                    <p><strong>Age:</strong> <span id="patientAge">30</span></p>
-                    <p><strong>Gender:</strong> <span id="patientGender">Male</span></p>
-                    <p><strong>Contact:</strong> <span id="patientContact">123-456-7890</span></p>
-                </div>
-
-                <!-- Medication Details Column -->
-                <div class="medication-details">
-                    <h3>Patient Medication Details</h3>
-                    <p><strong>Medication:</strong> <span id="medicationName">Paracetamol 500mg</span></p>
-                    <p><strong>Dosage:</strong> <span id="medicationDosage">Twice a day</span></p>
-                    <p><strong>Prescription Date:</strong> <span id="medicationDate">2024-11-23</span></p>
-                </div>
-            </div>
-        </section>
     </div>
 
-    <script src="prescription.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/patient.js"></script>
 </body>
 </html>

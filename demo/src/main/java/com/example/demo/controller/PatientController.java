@@ -183,7 +183,7 @@ public class PatientController {
         Patient patient = patientService.getPatientByUsername(username);
         if (file != null && !file.isEmpty()){
             System.out.println("Yes iam changing profile picture");
-            patientService.Saveprofilepicture(file,patient);
+            System.out.println(patientService.Saveprofilepicture(file,patient));
         }
         if (patientService.updatePatient(formData,patient)){
             response.put("Fname",patient.getFname());

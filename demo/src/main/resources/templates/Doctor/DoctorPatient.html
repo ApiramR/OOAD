@@ -33,10 +33,10 @@
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
-                <img th:src="${patient.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px" alt="profile picture">
+                <img th:src="${doctor.profilepic}" class="w3-circle w3-margin-right" style="width:80px;height:80px" alt="profile picture">
             </div>
             <div class="w3-col w3-bar">
-            <span>Welcome, <strong th:text="${patient.Fname} + ' ' + (${patient.Mname} != null and ${patient.Mname} != '' ? ${patient.Mname} + ' ' : '') + ${patient.Lname}"></strong></span><br>
+            <span>Welcome, <strong th:text="${doctor.Fname} + ' ' + (${doctor.Mname} != null and ${doctor.Mname} != '' ? ${doctor.Mname} + ' ' : '') + ${doctor.Lname}"></strong></span><br>
             </div>
         </div>
         <hr>
@@ -45,10 +45,9 @@
         </div>
         <div class="w3-bar-block">
             <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-            <a th:href="@{/patient/{username}/profile(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
-            <a th:href="@{/patient/{username}/reports(username=${patient.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i> Reports  </a>
-            <a th:href="@{/patient/{username}/prescriptions(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Prescriptions </a>
-            <a th:href="@{/patient/settings(username=${patient.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+            <a th:href="@{/doctor/{username}/profile(username=${doctor.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Profile </a>
+            <a th:href="@{/doctor/{username}/patient(username=${doctor.username})}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Consult Patient </a>
+            <a th:href="@{/doctor/settings(username=${doctor.username})}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
         </div>
     </nav>
 
@@ -68,22 +67,76 @@
     <div class="w3-panel">
         <div class="w3-row-padding" style="margin:0 -16px">
         
-        <div class="w3-twothird">
+        <div class="w3-twothird" th:if="${success != null and success != 'Patient not exist'}">
+            <h5>Patient Details</h5>
+                <table class="w3-table w3-striped w3-white">
+                <tr>
+                    <td><i class="fa w3-text-blue w3-large"></i></td>
+                    <td>Full Name</td>
+                    <td><i th:text="${patient.Fname} + ' ' + (${patient.Mname} != null and ${patient.Mname} != '' ? ${patient.Mname} + ' ' : '') + ${patient.Lname}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-red w3-large"></i></td>
+                    <td>Username</td>
+                    <td><i th:text = "${patient.username}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-yellow w3-large"></i></td>
+                    <td>Email Address</td>
+                    <td><i th:text = "${patient.email}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-red w3-large"></i></td>
+                    <td>Gender</td>
+                    <td><i th:text = "${patient.gender}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-blue w3-large"></i></td>
+                    <td>Phone Number</td>
+                    <td><i th:text = "${patient.pno}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-red w3-large"></i></td>
+                    <td>Age</td>
+                    <td><i th:text="${age}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-green w3-large"></i></td>
+                    <td>Address</td>
+                    <td><i th:text="${patient.address}"></i></td>
+                </tr>
+                <tr>
+                    <td><i class="fa w3-text-green w3-large"></i></td>
+                        <td>Bloodtype</td>
+                    <td><i th:text="${patient.bloodtype}"></i></td>
+                </tr>
+                </table>
             <h5>Reports</h5>
             <table class="w3-table w3-striped w3-white" id = "reportsList">
                 <tr th:each = "instance : ${reports}">
                     <td th:text="${instance.title}"></td>
                     <td><a th:href = "@{${reportpath} + ${instance.Reportfile}}" type="application/pdf" target="_blank">view report</a></td>
                     <td th:text="${instance.updatedDate}"></td>
-                    <td><a th:href = @{/patient/{username}/reports/remove/{reportid}(username=${patient.username},reportid=${instance.ReportID})}>X</a></td>
                 </tr>
             </table>
+            <hr>
+            <h5>Add Prescription: <a th:href = "@{/doctor/patient/{patientID}(patientId=${patient.PatientID})}">Click Here</a></h5>
+            <h5 th:if="${prescription}" th:text = "${prescription}"></h5>
+            <form th:action="@{/doctor/{pid}/comment(pid=${patient.PatientID})}" method = "POST">
+                <div class="w3-section">
+                    <label for="comment" class="w3-text-grey"><b>Comment:</b></label>
+                    <textarea id="comment" name="comment" class="w3-input w3-border w3-round" rows="4" placeholder="Comments on patient health condition" required></textarea>
+                </div>
+                <div class="w3-section">
+                    <button type="submit" class="w3-button w3-blue w3-round w3-block">Submit Prescription</button>
+                </div>
+            </form>
+            
         </div>
         <div class="w3-third">
-            <form id = "uploadForm" th:action="@{/patient/{username}/reports(username=${patient.username})}" method = "POST" enctype="multipart/form-data">
-                <h5>Add Report:</h5>
-                <input type = "file" id = "fileinput" name = "file" accept="application/pdf" required>
-                <input type = "text" id = "filetitle" name = "title" placeholder="Report Title" required>
+            <form id = "uploadForm" th:action="@{/doctor/{username}/patient(username=${doctor.username})}" method = "POST">
+                <h5>Search Patient:</h5>
+                <input type = "text" id = "filetitle" name = "patientID" placeholder="Patient ID" required>
                 <input type="submit">
             </form>
             <div id = "uploadStatus">

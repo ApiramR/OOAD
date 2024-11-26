@@ -17,17 +17,26 @@ import jakarta.persistence.metamodel.EntityType;
 public class PrescriptionService{
 
     @Autowired
-    PrescriptionRepo rep;
-    @Autowired
-    private PrescriptionRepo prescriptionRepo;
-
+    private PrescriptionRepo rep;
+    
     public Prescription addPrescription(Prescription prescription){
         return rep.save(prescription);
     }
     
-    public Prescription updatePrescription(Prescription prescription){
-        return rep.save(prescription);
-    }
+    // public Prescription updatePrescription(Prescription prescription){
+    //     return rep.save(prescription);
+    // }
+
+
+    // public Prescription updatePrescription(Prescription prescription) {
+    //     // Check if the prescription ID exists
+    //     if (!prescriptionRepo.existsById(prescription.getPresID())) {
+    //         throw new RuntimeException("Prescription not found with ID: " + prescription.getPresID());
+    //     }
+
+    //     // Save and return the updated prescription
+    //     return prescriptionRepo.save(prescription);
+    // }
 
     public Prescription getPrescriptionByID(Long PresID){
         return rep.findById(PresID).orElse(new Prescription());
@@ -49,7 +58,7 @@ public class PrescriptionService{
     }
 
     public long countAllPrescriptions() {
-        return prescriptionRepo.count();
+        return rep.count();
     }
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang = "en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>OOAD</title>
+    <title>Prescriptions</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel = "stylesheet" type = "text/css" href = "/css/dashboard.css">
@@ -81,7 +81,7 @@
                     <p id="prescriptionReadyCount" class="w3-xxxlarge w3-text-white">0</p>
                 </div>
                 <div class="w3-clear"></div>
-                <h4>Prescriptions Ready</h4>
+                <h4>Prescriptions Ready To Deliver</h4>
             </div>
         </div>
         <div class="w3-quarter">
@@ -105,37 +105,21 @@
     </div>
 
     <hr>
-    <table class="w3-table w3-striped w3-white" id="pharmacyPrescriptionTable">
-        <thead>
-        <tr>
-            <th>Prescription ID</th>
-            <th>Patient Name</th>
-            <th>Medication</th>
-            <th>Dosage</th>
-            <th>Is Ready</th>
-            <th>Is Completed</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="instance : ${prescriptions}">
-            <td th:text="${instance.prescription.presID}">Prescription ID</td>
-            <td th:text="${instance.prescription.patient.Fname} + ' ' + (${instance.prescription.patient.Mname != null && instance.prescription.patient.Mname != '' ? instance.prescription.patient.Mname + ' ' : ''}) + ${instance.prescription.patient.Lname}">Patient Name</td>
-            <td th:text="${instance.prescription.meds}">Medication</td>
-            <td th:text="${instance.prescription.dosage}">Dosage</td>
-            <td th:text="${instance.isReady ? 'Yes' : 'No'}">Is Ready</td>
-            <td th:text="${instance.isCompleted ? 'Yes' : 'No'}">Is Completed</td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="w3-main" style="margin-left:300px;margin-top:43px;">
+        <header class="w3-container" style="padding-top:22px">
+            <h3><b>Patient Prescriptions</b></h3>
+        </header>
 
 
-<hr>
+        <hr>
 
 
 
 
 
 
+
+    <hr>
 
 
 
@@ -163,33 +147,11 @@
         fetchPrescriptionPrepareCount();
         fetchPrescriptionReadyCountCount();
         fetchOrderCount();
-        fetchPrescriptions()
+
 
 
 
     });
-    // Get the Sidebar
-    var mySidebar = document.getElementById("mySidebar");
-
-    // Get the DIV with overlay effect
-    var overlayBg = document.getElementById("myOverlay");
-
-    // Toggle between showing and hiding the sidebar, and add overlay effect
-    function w3_open() {
-        if (mySidebar.style.display === 'block') {
-            mySidebar.style.display = 'none';
-            overlayBg.style.display = "none";
-        } else {
-            mySidebar.style.display = 'block';
-            overlayBg.style.display = "block";
-        }
-    }
-
-    // Close the sidebar with the close button
-    function w3_close() {
-        mySidebar.style.display = "none";
-        overlayBg.style.display = "none";
-    }
 
 
     function fetchPrescriptionCount() {
@@ -246,8 +208,7 @@
 
 
 
-
 </script>
-
+</div>
 </body>
 </html>

@@ -27,6 +27,10 @@ public interface PharmacyPrescriptionRepo extends JpaRepository<PharmacyPrescrip
 
     @Query("SELECT p FROM PharmacyPrescription  p WHERE p.pharmacy.pharmacyID = :pharmacyID")
     List<PharmacyPrescription> findAllByPharmacyID(@Param("pharmacyID") Long pharmacyID);
+
+    @Query("SELECT p FROM PharmacyPrescription p WHERE p.pharmacy.username = :username")
+    List<PharmacyPrescription> findAllByPharmacyUsername(@Param("username") String username);
+
 }
 
 

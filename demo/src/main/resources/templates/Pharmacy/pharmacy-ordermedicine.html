@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang = "en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>OOAD</title>
+    <title>Order Medicine</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel = "stylesheet" type = "text/css" href = "/css/dashboard.css">
@@ -22,7 +22,6 @@
             crossorigin="anonymous">
     </script>
 </head>
-
 
 
 <body class="w3-light-grey">
@@ -57,10 +56,6 @@
 
     </div>
 </nav>
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
-
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
@@ -71,11 +66,13 @@
     </header>
 
 
+
+
     <hr>
     <div class="w3-container">
-        <h5>Manage Inventory</h5>
-        <form id="inventoryForm">
-            <input type="hidden" id="inventoryID" name="inventoryID">
+        <h5>Manage Orders from Suppliers</h5>
+        <form id="orderMedicineForm">
+            <input type="hidden" id="orderMedicineID" name="orderMedicineID">
             <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
                 <tr>
                     <td>Medicine ID</td>
@@ -84,60 +81,44 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Price</td>
+                    <td>Quantity</td>
                     <td>
-                        <input class="w3-input w3-border w3-round" type="number" id="price" name="price" placeholder="Enter Price" required>
+                        <input class="w3-input w3-border w3-round" type="number" id="quantity" name="quantity" placeholder="Enter Quantity needed" required>
                     </td>
                 </tr>
                 <tr>
-                    <td>Expiry Date</td>
+                    <td>Supplier ID</td>
                     <td>
-                        <input class="w3-input w3-border w3-round" type="date" id="expiryDate" name="expiryDate" required>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Quantity In Stock</td>
-                    <td>
-                        <input class="w3-input w3-border w3-round" type="number" id="quantityInStock" name="quantityInStock" placeholder="Enter Quantity" required>
+                        <input class="w3-input w3-border w3-round" type="number" id="supplierID" name="supplierID"   placeholder="Enter Supplier ID"required>
                     </td>
                 </tr>
             </table>
             <br>
 
-            <button class="w3-button w3-dark-grey" type="button" id="addBtn">Add</button>
-            <button class="w3-button w3-blue-grey" type="button" id="updateBtn">Update</button>
-            <button class="w3-button w3-red" type="button" id="deleteBtn">Delete</button>
-            <hr>
-            <input class="w3-input w3-border" type="text" id="search" placeholder="Search Inventory...">
+            <button class="w3-button w3-dark-grey" type="button" id="placeOrderBtn">Place an Order</button>
+           
 
-
-
-        </form>
-        <div id="responseMessage"></div>
-        <hr>
-        <div>
-            <h5>Inventory List</h5>
-            <table id="inventoryTable" class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Medicine ID</th>
-                    <th>Medicine Name</th>
-                    <th>Strength</th>
-                    <th>Price</th>
-                    <th>Expiry Date</th>
-                    <th>Quantity</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <!-- Inventory items will be dynamically populated here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
     <hr>
+            <div>
+                <h5>Current Orders</h5>
+                <table id="inventoryTable" class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+                    <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Medicine ID</th>
+                        <th>Medicine Name</th>
+                        <th>Strength</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <!-- Inventory items will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <hr>
     <div class="w3-container">
         <h5>Search Medicines</h5>
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -154,133 +135,57 @@
                 <th>Medicine Type</th>
                 <th>Strength</th>
                 <th>Manufacturer</th>
+                <th>Supplier ID</th>
             </tr>
             </thead>
             <tbody>
             <!-- Medicines will be dynamically populated here -->
             </tbody>
         </table>
-    </div>
+
 
 
     <br>
-    <footer class="w3-container w3-padding-16 w3-dark-grey">
-        <h4>Group 14 Y2S1 CS BATCH</h4>
-        <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
-    </footer>
-</div>
+        <footer class="w3-container w3-padding-16 w3-dark-grey">
+            <h4>Group 14 Y2S1 CS BATCH</h4>
+            <p>This part by <a href="https://github.com/ApiramR/OOAD.git" target="_blank">nipunmeegoda it23283626</a></p>
+        </footer>
+    </div>
 <script>
     $(document).ready(function () {
-        // Fetch and populate inventory
-        fetchInventory();
+        fetchOrders();
 
-// Add inventory
-        $("#addBtn").on("click", function () {
+        $("#placeOrderBtn").on("click", function () {
             const medID = Number($("#medID").val());
-            const price = $("#price").val();
-            const expiryDate = $("#expiryDate").val();
-            const quantityInStock = $("#quantityInStock").val();
+            const OrderQuantity = $("#quantity").val();
+            const supplierID = $("#supplierID").val();
 
-            if (!medID || !price || !expiryDate || !quantityInStock) {
+            if (!medID || !OrderQuantity || !supplierID ) {
                 alert("All fields are required.");
                 return;
             }
 
-            const inventoryData = {
-                medID: Number($("#medID").val()), // Ensure this is a number
-                price: Number($("#price").val()),
-                expiryDate: $("#expiryDate").val(),
-                quantityInStock: Number($("#quantityInStock").val()),
-                <!--pharmacyUsername: $("#pharmacyUsername").val()-->
-                pharmacyUsername: "Pharmacy"// Include pharmacy username
+            const supplierData = {
+                medID: Number($("#medID").val()),
+                OrderQuantity: Number($("#quantity").val()),
+                supplierID: $("#supplierID").val(),
+                pharmacyUsername: "Pharmacy"
             };
 
             $.ajax({
-                url: '/api/inventory/add',
+                url: '/api/order/placeorder',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(inventoryData),
+                data: JSON.stringify(supplierData),
                 success: function () {
-                    alert("Inventory added successfully!");
-                    fetchInventory();
+                    alert("Order has been Placed successfully!");
+                    fetchOrders();
                 },
                 error: function (xhr) {
                     alert("Error: " + xhr.responseText);
                 }
             });
 
-        });
-
-
-        $("#updateBtn").on("click", function () {
-            const inventoryID = $("#inventoryID").val();
-            const medID = Number($("#medID").val());
-            const price = Number($("#price").val());
-            const expiryDate = $("#expiryDate").val();
-            const quantityInStock = Number($("#quantityInStock").val());
-
-            if (!inventoryID || !medID || !price || !expiryDate || !quantityInStock) {
-                alert("All fields are required.");
-                return;
-            }
-
-            const inventoryData = {
-                medID: medID,
-                price: price,
-                expiryDate: expiryDate,
-                quantityInStock: quantityInStock
-            };
-
-            $.ajax({
-                url: `/api/inventory/update/${inventoryID}`,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(inventoryData),
-                success: function () {
-                    alert("Inventory updated successfully!");
-                    fetchInventory(); // Refresh the inventory list
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseText);
-                }
-            });
-        });
-
-
-        //Search Inventory
-        $("#search").on("input", function () {
-            const query = $(this).val();
-
-            $.ajax({
-                url: `/api/inventory/search?query=${query}`,
-                type: 'GET',
-                success: function (response) {
-                    const tableBody = $("#inventoryTable tbody");
-                    tableBody.empty();
-
-                    if (response.length === 0) {
-                        tableBody.append('<tr><td colspan="8" class="text-center">No inventory items found</td></tr>');
-                    } else {
-                        response.forEach(item => {
-                            tableBody.append(`
-                        <tr>
-                            <td class="id">${item.inventoryID}</td>
-                            <td class="medID">${item.medID}</td>
-                            <td class="medicineName">${item.medicineName}</td>
-                            <td class="strength">${item.strength}</td>
-                            <td class="price">${item.price}</td>
-                            <td class="expiryDate">${item.expiryDate}</td>
-                            <td class="quantity">${item.quantityInStock}</td>
-                            <td><button class="w3-button w3-blue editBtn">Edit</button></td>
-                        </tr>
-                    `);
-                        });
-                    }
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseText);
-                }
-            });
         });
 
         //search Medicines
@@ -322,41 +227,9 @@
         });
 
 
-
-
-        // Delete inventory
-        $("#deleteBtn").on("click", function () {
-            const id = $("#inventoryID").val();
-            if (!id) {
-                alert("Select an item to delete.");
-                return;
-            }
-            $.ajax({
-                url: `/api/inventory/delete/${id}`,
-                type: 'DELETE',
-                success: function () {
-                    $("#responseMessage").text("Inventory deleted successfully!");
-                    fetchInventory();
-                },
-                error: function (xhr) {
-                    $("#responseMessage").text("Error: " + xhr.responseText);
-                }
-            });
-        });
-
-        // Populate form when editing
-        $("#inventoryTable").on("click", ".editBtn", function () {
-            const row = $(this).closest("tr");
-            $("#inventoryID").val(row.find(".id").text());
-            $("#medID").val(row.find(".medID").text());
-            $("#price").val(row.find(".price").text());
-            $("#expiryDate").val(row.find(".expiryDate").text());
-            $("#quantityInStock").val(row.find(".quantity").text());
-        });
-
         // Fetch inventory
-        function fetchInventory() {
-            $.get('/api/inventory/all', function (response) {
+        function fetchOrders() {
+            $.get('/api/order/all', function (response) {
                 const tableBody = $("#inventoryTable tbody");
                 tableBody.empty();
                 if (response.length === 0) {

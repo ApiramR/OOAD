@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang = "en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>OOAD</title>
+  <title>Settings</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel = "stylesheet" type = "text/css" href = "/css/dashboard.css">
@@ -172,28 +172,7 @@
 
 
 <script>
-  // Get the Sidebar
-  var mySidebar = document.getElementById("mySidebar");
 
-  // Get the DIV with overlay effect
-  var overlayBg = document.getElementById("myOverlay");
-
-  // Toggle between showing and hiding the sidebar, and add overlay effect
-  function w3_open() {
-    if (mySidebar.style.display === 'block') {
-      mySidebar.style.display = 'none';
-      overlayBg.style.display = "none";
-    } else {
-      mySidebar.style.display = 'block';
-      overlayBg.style.display = "block";
-    }
-  }
-
-  // Close the sidebar with the close button
-  function w3_close() {
-    mySidebar.style.display = "none";
-    overlayBg.style.display = "none";
-  }
   function pchek(v){
     var lowerCaseLetters = /[a-z]/g;
     if(v.match(/[a-z]/g)){

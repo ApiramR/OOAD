@@ -56,8 +56,6 @@ public class PharmacyPrescriptionService {
     }
 
 
-
-
     @Autowired
     public PharmacyPrescriptionService(PharmacyPrescriptionRepo repository, PharmacyPrescriptionRepo pharmacyPrescriptionRepo) {
         this.repository = repository;
@@ -70,6 +68,10 @@ public class PharmacyPrescriptionService {
 
     public long countIsCompletedTrue() {
         return repository.countIsCompletedTrue();
+    }
+
+    public List<PharmacyPrescription> getPrescriptionsByUsername(String username) {
+        return repository.findAllByPharmacyUsername(username);
     }
 
 

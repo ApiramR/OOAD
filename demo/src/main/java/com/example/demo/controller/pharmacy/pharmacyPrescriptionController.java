@@ -17,44 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-/*
 
-@RestController
-@AllArgsConstructor
-@RequestMapping("api/prescriptions")
-public class pharmacyPrescriptionController {
-
-    private final PrescriptionService prescriptionService;
-
-
-
-    @GetMapping("/prepare/count")
-    public ResponseEntity<Long> countPreparedPrescriptions() {
-        try {
-            long itemCount = PharmacyPrescriptionService.countAllPrescriptionsPrepare();
-            return ResponseEntity.ok(itemCount);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(0L);
-        }
-    }
-
-    @GetMapping("/ready/count")
-    public long getIsReadyCount() {
-        return PharmacyPrescriptionService.countIsReadyTrue();
-    }
-
-    @GetMapping("/order/count")
-    public ResponseEntity<Long> countOrderPrescriptions() {
-        try {
-            long itemCount = PharmacyPrescriptionService.countAllPrescriptionsOrder();
-            return ResponseEntity.ok(itemCount);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(0L);
-        }
-    }
-
-}
- */
 
 @RestController
 @RequestMapping("/api/prescriptions")
@@ -97,12 +60,12 @@ public class pharmacyPrescriptionController {
         return prescriptionService.countAllPrescriptions() - (pharmacyPrescriptionService.countIsReadyTrue()+pharmacyPrescriptionService.countIsCompletedTrue());
     }
 
-    @GetMapping("/{pharmacyID}/prescriptions")
-    public String getPrescriptionsByPharmacyID(@PathVariable Long pharmacyID, Model model) {
-        List<PharmacyPrescription> prescriptions = pharmacyPrescriptionService.getPrescriptionsByPharmacyID(pharmacyID);
-        model.addAttribute("prescriptions", prescriptions);
-        return "PharmacyPrescriptions";
+    @GetMapping("/{username}/prescriptions")
+    public ResponseEntity<List<PharmacyPrescription>> getPrescriptionsByUsername(@PathVariable String username) {
+        List<PharmacyPrescription> prescriptions = pharmacyPrescriptionService.getPrescriptionsByUsername(username);
+        return ResponseEntity.ok(prescriptions);
     }
+
 
 
 

@@ -86,8 +86,6 @@ public class pharmacyController {
         return "/Pharmacy/pharmacy-prescriptions";
     }
 
-
-
     //Dashboard for seconds
     @RequestMapping(value="/pharmacy/{username}",method = RequestMethod.GET)
     String urlDashboard(Model model){
@@ -98,10 +96,8 @@ public class pharmacyController {
 
         String[] fields = pharmacyService.getFields();
         Map<String, Object> pharmacyDict = modelMapperUtil.mapFieldsToGetters(pharmacy, fields);
-
         return "/Pharmacy/pharmacy-dashboard";
     }
-
 
     @RequestMapping(value="/pharmacy/{username}/settings",method = RequestMethod.GET)
     String pharmacySettings(Model model){
@@ -115,7 +111,7 @@ public class pharmacyController {
 
         return "Pharmacy/pharmacy-settings";
     }
-
+    
     @PostMapping("pharmacy/{username}/settings")
     public ResponseEntity<?> updatePharmacySettings(
             @PathVariable String username,

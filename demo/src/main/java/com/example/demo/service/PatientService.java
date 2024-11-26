@@ -58,7 +58,9 @@ public class PatientService {
                 File destinationFile = new File(directory,filename);
                 patient.setProfilepicture(filename);    
                 file.transferTo(destinationFile);
+                rep.save(patient);
                 return "/images/" + filename;
+                
             }catch(IOException e){
                 e.printStackTrace();
                 return "/images/defaultpp.jpg";
@@ -108,6 +110,7 @@ public class PatientService {
             e.printStackTrace();
             return false;
         }
+        rep.save(patient);
         return true;
     }
 

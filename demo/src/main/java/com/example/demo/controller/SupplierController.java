@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Inventory;
 import com.example.demo.model.Medicine;
+import com.example.demo.model.Pharmacy;
 import com.example.demo.service.MedicineService;
+import com.example.demo.service.ModelMapperUtil;
 import com.example.demo.service.SuppInventoryService;
 import com.example.demo.service.SupplierService;
 
@@ -33,6 +37,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private ModelMapperUtil modelMapperUtil;
 
     // Counter for auto-incrementing InventoryID
     private long inventoryIDCounter = 1;
@@ -141,6 +148,28 @@ public class SupplierController {
                 System.out.println(username);
                 System.out.println(authentication.getName());
             }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean Auth(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            System.out.println("Authenticated User: " + authentication.getName());
+            System.out.println("Authenticated User roles: " + authentication.getAuthorities());
+        }
+        if (authentication != null){
+            String username = authentication.getName();
+            Supplier supplier = supplierService.getSupplierByUsername(username);
+            String profilepicture = "/images/" + supplier.getProfilepicture();
+
+            String[] fields = supplierService.getFields();
+            Map<String, Object> supplierDict = modelMapperUtil.mapFieldsToGetters(supplier, fields);
+            supplierDict.put("profilepic",profilepicture);
+            model.addAttribute("pharmacy",supplierDict);
+        }
+        else{
             return true;
         }
         return false;

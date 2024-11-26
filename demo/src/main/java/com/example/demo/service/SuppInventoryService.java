@@ -31,4 +31,6 @@ public class SuppInventoryService {
     public List<SuppInventory> getAllSuppInventory() {
         return suppInventoryRepo.findAll();
     }
+
+   
 }

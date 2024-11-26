@@ -18,22 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Inventory;
 import com.example.demo.model.Medicine;
-import com.example.demo.model.Pharmacy;
 import com.example.demo.model.Supplier;
-import com.example.demo.service.MedicineService;
 import com.example.demo.service.ModelMapperUtil;
-import com.example.demo.service.SuppInventoryService;
 import com.example.demo.service.SupplierService;
 
 @RestController
 @RequestMapping("/inventory")
 public class SupplierController {
 
-    @Autowired
-    private SuppInventoryService suppInventoryService;
-
-    @Autowired
-    private MedicineService medicineService;
 
     @Autowired
     private SupplierService supplierService;

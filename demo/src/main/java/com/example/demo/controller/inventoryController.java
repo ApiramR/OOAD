@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 
 
 
@@ -43,11 +40,12 @@ public class inventoryController {
         try {
 
             // Parse request data
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String pharmacyUsername = authentication.getName();
             Long medID = Long.valueOf(request.get("medID").toString());
             long price = Long.parseLong(request.get("price").toString());
             String expiryDate = request.get("expiryDate").toString();
             Integer quantityInStock = Integer.valueOf(request.get("quantityInStock").toString());
-            String pharmacyUsername = request.get("pharmacyUsername").toString();
 
             // Fetch Medicine by medID
             Medicine medicine = medicineService.getMedicineByMedID(medID);

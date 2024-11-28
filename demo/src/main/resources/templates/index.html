@@ -1,113 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Healthcare Management System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare System</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        .hero {
-            background: linear-gradient(to right, #36d1dc, #5b86e5);
+        .hero-section {
+            background-image: url('https://via.placeholder.com/1500x500'); /* Replace with your image */
+            background-size: cover;
+            background-position: center;
+            height: 500px;
             color: white;
-            padding: 100px 20px;
+            text-shadow: 2px 2px 5px black;
         }
-        .feature {
+        .hero-section h1 {
+            font-size: 60px;
+        }
+
+        .hero-section p {
+            font-size: 24px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+
+        .action-buttons {
             margin-top: 20px;
-        }
-        .cta-buttons {
-            margin-top: 40px;
-        }
-        .form-container {
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
 
-<!-- Hero Section -->
-<div class="w3-container hero">
-    <h1 class="w3-center">Welcome to Healthcare Management System</h1>
-    <p class="w3-center">Connecting Patients, Doctors, Pharmacies, and Suppliers seamlessly.</p>
-    <div class="w3-center cta-buttons">
-        <a href="#login" class="w3-button w3-white w3-round-large w3-margin-right">Login</a>
-        <a href="#create-account" class="w3-button w3-black w3-round-large">Create Account</a>
-    </div>
-</div>
-
-<!-- Features Section -->
-<div class="w3-container w3-padding-64" id="features">
-    <h2 class="w3-center">Features</h2>
-    <div class="w3-row-padding w3-margin-top">
-        <div class="w3-third feature">
-            <div class="w3-card w3-padding">
-                <h3>Patient Management</h3>
-                <p>Patients can view their medical history, reports, and prescriptions in one place.</p>
-            </div>
-        </div>
-        <div class="w3-third feature">
-            <div class="w3-card w3-padding">
-                <h3>Doctor Access</h3>
-                <p>Doctors can access patient profiles and update their records and prescriptions.</p>
-            </div>
-        </div>
-        <div class="w3-third feature">
-            <div class="w3-card w3-padding">
-                <h3>Pharmacy & Supply Chain</h3>
-                <p>Pharmacies can check medicine availability and request supplies from trusted suppliers.</p>
+    <!-- Hero Section -->
+    <div class="hero-section w3-display-container w3-center">
+        <div class="w3-display-middle">
+            <h1>Welcome to the HealthCare System</h1>
+            <p>Bridging Patients, Doctors, Pharmacies, and Suppliers seamlessly.</p>
+            <div class="action-buttons">
+                <a href="/login" class="w3-button w3-blue w3-round-large w3-xlarge w3-margin-right">Login</a>
+                <a href="/register" class="w3-button w3-green w3-round-large w3-xlarge">Register</a>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Login Section -->
-<div class="w3-container w3-padding-64 w3-light-grey" id="login">
-    <h2 class="w3-center">Login</h2>
-    <div class="w3-row w3-center">
-        <div class="w3-col m4 l4"></div>
-        <div class="w3-col m4 l4 form-container">
-            <form>
-                <label for="username">Username:</label>
-                <input class="w3-input w3-border w3-round" type="text" id="username" placeholder="Enter your username" required>
+    <!-- Features Section -->
+    <div class="w3-container w3-padding-64 w3-light-grey">
+        <h2 class="w3-center">Our Services</h2>
+        <p class="w3-center w3-large">Explore how our system connects everyone in healthcare.</p>
 
-                <label for="password" class="w3-margin-top">Password:</label>
-                <input class="w3-input w3-border w3-round" type="password" id="password" placeholder="Enter your password" required>
+        <div class="w3-row-padding w3-margin-top">
+            <!-- Patient Card -->
+            <div class="w3-third">
+                <div class="w3-card-4 card w3-white">
+                    <div class="w3-container w3-center">
+                        <h3>Patients</h3>
+                        <p>View medical history, reports, and prescriptions.</p>
+                        <a href="/patient" class="w3-button w3-blue w3-round">Explore</a>
+                    </div>
+                </div>
+            </div>
 
-                <button class="w3-button w3-blue w3-round w3-margin-top w3-block">Login</button>
-            </form>
+            <!-- Doctor Card -->
+            <div class="w3-third">
+                <div class="w3-card-4 card w3-white">
+                    <div class="w3-container w3-center">
+                        <h3>Doctors</h3>
+                        <p>Access patient records and manage prescriptions.</p>
+                        <a href="/doctor" class="w3-button w3-green w3-round">Explore</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pharmacy Card -->
+            <div class="w3-third">
+                <div class="w3-card-4 card w3-white">
+                    <div class="w3-container w3-center">
+                        <h3>Pharmacies</h3>
+                        <p>Check availability and request medicines from suppliers.</p>
+                        <a href="/pharmacy" class="w3-button w3-purple w3-round">Explore</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="w3-col m4 l4"></div>
-    </div>
-</div>
 
-<!-- Create Account Section -->
-<div class="w3-container w3-padding-64" id="create-account">
-    <h2 class="w3-center">Create Account</h2>
-    <div class="w3-row w3-center">
-        <div class="w3-col m4 l4"></div>
-        <div class="w3-col m4 l4 form-container">
-            <form>
-                <label for="new-username">Username:</label>
-                <input class="w3-input w3-border w3-round" type="text" id="new-username" placeholder="Choose a username" required>
-
-                <label for="email" class="w3-margin-top">Email:</label>
-                <input class="w3-input w3-border w3-round" type="email" id="email" placeholder="Enter your email" required>
-
-                <label for="new-password" class="w3-margin-top">Password:</label>
-                <input class="w3-input w3-border w3-round" type="password" id="new-password" placeholder="Create a password" required>
-
-                <button class="w3-button w3-green w3-round w3-margin-top w3-block">Create Account</button>
-            </form>
+        <div class="w3-row-padding w3-margin-top">
+            <!-- Supplier Card -->
+            <div class="w3-third w3-offset-third">
+                <div class="w3-card-4 card w3-white">
+                    <div class="w3-container w3-center">
+                        <h3>Suppliers</h3>
+                        <p>Manage medicine supply requests efficiently.</p>
+                        <a href="/supplier" class="w3-button w3-orange w3-round">Explore</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="w3-col m4 l4"></div>
     </div>
-</div>
 
-<!-- Footer -->
-<footer class="w3-container w3-blue w3-padding-16 w3-center">
-    <p>Healthcare Management System &copy; 2024. All Rights Reserved.</p>
-</footer>
+    <!-- Footer Section -->
+    <footer class="w3-container w3-blue w3-center w3-padding-16">
+        <p>Powered by <b>Your Team</b>. All rights reserved © 2024</p>
+    </footer>
 
 </body>
 </html>

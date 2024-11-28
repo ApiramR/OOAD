@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Prescription {
     @Column(name="presid")
     private Long presID;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "MID", nullable = false)
     private Medicine meds;
 

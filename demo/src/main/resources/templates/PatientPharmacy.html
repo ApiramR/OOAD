@@ -76,9 +76,9 @@
                         <td>Address</td>
                     </tr>
                     <tr th:each = "instance : ${pharmacy}">
-                        <td th:text="${instance.Fname} + ${instance.Lname} :"></td>
+                         <td th:text="${instance.Fname} + ' ' + ${instance.Lname}"></td>
                         <td th:text="${instance.address}"></td>
-                    </tr>
+                    </tr> 
                 </table>  
         </div>
         </div>
